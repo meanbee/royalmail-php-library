@@ -1,110 +1,186 @@
-<?php
+<?php namespace Meanbee\RoyalMail;
 
-/**
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- *
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to support@meanbee.com so we can send you a copy immediately.
- *
- * @category   Meanbee
- * @package    Royalmail-PHP-Library
- * @copyright  Copyright (c) 2015 Meanbee Internet Solutions (http://www.meanbee.com)
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- */
-
-use Meanbee\RoyalMail;
-use Meanbee\RoyalMailMethod;
-use Meanbee\data;
-
-class RoyalmailTest extends PHPUnit_Framework_TestCase
+class RoyalmailTest extends \PHPUnit_Framework_TestCase
 {
 
-    private $royalMailClass;
-    private $royalMailMethod;
-    private $royalMailData;
+    private $calculateMethodClass;
+    private $dataClass;
+    private $emptyArray;
+    private $testDataClassArray;
 
+    /**
+     * Setup the necessary classes and data
+     */
     public function setUp()
     {
-        $this->royalMailClass = new RoyalMail();
-        $this->royalMailMethod = new RoyalMailMethod();
-        $this->royalMailData = new data();
+        $this->calculateMethodClass = new CalculateMethod();
+        $this->dataClass = new Data(
+            $this->calculateMethodClass->_csvCountryCode,
+            $this->calculateMethodClass->_csvZoneToDeliverMethod,
+            $this->calculateMethodClass->_csvDeliveryMethodMeta,
+            $this->calculateMethodClass->_csvDeliveryToPrice
+        );
 
+        $this->emptyArray = array();
+        $this->testDataClassArray = Array
+        (
+            0 => Array
+            (
+                'shippingMethodName'      => 'WORLD_ZONE_EU_INTERNATIONAL_TRACKED_AND_SIGNED_LETTER',
+                'minimumWeight'           => 0.021,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 6.52,
+                'insuranceValue'          => 50,
+                'shippingMethodNameClean' => 'Royal Mail International Tracked and Signed Letter'
+            ),
+            1 => Array
+            (
+                'shippingMethodName'      => 'WORLD_ZONE_EU_INTERNATIONAL_TRACKED_AND_SIGNED_LARGE_LETTER',
+                'minimumWeight'           => 0.001,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 08.10,
+                'insuranceValue'          => 50,
+                'shippingMethodNameClean' => 'Royal Mail International Tracked and Signed Large Letter'
+            ),
+            2 => Array
+            (
+                'shippingMethodName'      => 'WORLD_ZONE_EU_INTERNATIONAL_SIGNED_LETTER',
+                'minimumWeight'           => 0.020,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 6.52,
+                'insuranceValue'          => 50,
+                'shippingMethodNameClean' => 'Royal Mail International Signed'
+            ),
+            3 => Array
+            (
+                'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVER_1PM',
+                'minimumWeight'           => 0.001,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 6.45,
+                'insuranceValue'          => 500,
+                'shippingMethodNameClean' => 'Royal Mail Special Delivery: Guaranteed by 1pm'
+            ),
+            4 => Array
+            (
+                'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVER_1PM',
+                'minimumWeight'           => 0.001,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 7.45,
+                'insuranceValue'          => 1000,
+                'shippingMethodNameClean' => 'Royal Mail Special Delivery: Guaranteed by 1pm'
+            ),
+            5 => Array
+            (
+                'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVER_1PM',
+                'minimumWeight'           => 0.001,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 9.45,
+                'insuranceValue'          => 2500,
+                'shippingMethodNameClean' => 'Royal Mail Special Delivery: Guaranteed by 1pm'
+            ),
+            6 => Array
+            (
+                'shippingMethodName'      => 'UK_STANDARD_FIRST_CLASS_LETTER',
+                'minimumWeight'           => 0.001,
+                'maximumWeight'           => 0.100,
+                'methodPrice'             => 0.63,
+                'insuranceValue'          => 20,
+                'shippingMethodNameClean' => 'Royal Mail Standard First Class Letter'
+            )
+
+        );
     }
 
+    /**
+     * Cleans up the used classes
+     */
     public function tearDown()
     {
-        $this->royalMailClass = null;
-        $this->royalMailMethod = null;
-        $this->royalMailData = null;
+        $this->calculateMethodClass = null;
+        $this->dataClass = null;
     }
 
-    public function testRoyalMailClass()
+    /**
+     * Test to ensure that the calculate method class is returning
+     */
+    public function testRoyalMailClassRealValues()
     {
-        $this->royalMailClass->getMethods('GB', 20, 0.050);
+        $this->assertNotEmpty($this->calculateMethodClass->getMethods('GB', 20, 0.050));
     }
 
+    /**
+     * Test to compare the returned data from the Data class to expected values
+     */
     public function testRoyalMailMethodRealValues()
     {
-        $this->royalMailMethod->getShippingMethods('GB', 19.99, 0.050);
-        $this->royalMailMethod->getShippingMethods('GB', 19.99, 0.050);
-        $this->royalMailMethod->getShippingMethods('GG', 10, 0.100);
-        $this->royalMailMethod->getShippingMethods('GB', 200, 0.010);
-
+        $this->assertEquals($this->testDataClassArray, $this->dataClass->calculateMethods('GB', 19.99, 0.050));
     }
 
+    /**
+     * Test to ensure the only the expected empty array is returned from incorrect data to the data class
+     */
     public function testRoyalMailMethodFake()
     {
-        $this->royalMailMethod->getShippingMethods('GASD', "aSDASD", "ASDASD");
-        $this->royalMailMethod->getShippingMethods(123123123, "asdasd", "asdadasd");
-        $this->royalMailMethod->getShippingMethods(123123, 123123, "ASDASD");
-        $this->royalMailMethod->getShippingMethods(123123123, 123123123, 123123123);
-        $this->royalMailMethod->getShippingMethods('GB', "aSD!!ASD", 0.100);
-        $this->royalMailMethod->getShippingMethods('GB', 123123123123, 0.100);
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GASD', "aSDASD", "ASDASD"));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(123123123, "asdasd", "asdadasd"));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(123123, 123123, "ASDASD"));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(123123123, 123123123, 123123123));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GB', "aSD!!ASD", 0.100));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GB', 123123123123, 0.100));
     }
 
+    /**
+     * Test to ensure that only the expected empty array is returned from null and incorrect data
+     * from the Data class
+     */
     public function testRoyalMailMethodNull()
     {
-        $this->royalMailMethod->getShippingMethods(null, 123123123123, 0.100);
-        $this->royalMailMethod->getShippingMethods(null, null, 0.100);
-        $this->royalMailMethod->getShippingMethods('GB', null, 0.100);
-        $this->royalMailMethod->getShippingMethods('GB', null, null);
-        $this->royalMailMethod->getShippingMethods('GB', 123123123123, null);
-        $this->royalMailMethod->getShippingMethods(null, null, null);
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(null, 123123123123, 0.100));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(null, null, 0.100));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GB', null, 0.100));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GB', null, null));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GB', 123123123123, null));
+        $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(null, null, null));
     }
 
-    public function testRoyalMailClassReal()
-    {
-        $this->royalMailClass->getMethods('GB', 19.99, 0.050);
-        $this->royalMailClass->getMethods('GB', 19.99, 0.050);
-        $this->royalMailClass->getMethods('GG', 10, 0.100);
-        $this->royalMailClass->getMethods('GB', 200, 0.010);
-
-    }
-
+    /**
+     * Test to ensure that only the expected empty array is returned from incorrect
+     * data from the CalculateMethod class
+     */
     public function testRoyalMailClassFake()
     {
-        $this->royalMailClass->getMethods('GASD', "aSDASD", "ASDASD");
-        $this->royalMailClass->getMethods(123123123, "asdasd", "asdadasd");
-        $this->royalMailClass->getMethods(123123, 123123, "ASDASD");
-        $this->royalMailClass->getMethods(123123123, 123123123, 123123123);
-        $this->royalMailClass->getMethods('GB', "aSD!!ASD", 0.100);
-        $this->royalMailClass->getMethods('GB', 123123123123, 0.100);
+        $this->assertEquals(
+            $this->emptyArray,
+            $this->calculateMethodClass->getMethods('GASD', "aSDASD", "ASDASD"));
+        $this->assertEquals(
+            $this->emptyArray,
+            $this->calculateMethodClass->getMethods(123123123, "asdasd", "asdadasd"));
+        $this->assertEquals(
+            $this->emptyArray,
+            $this->calculateMethodClass->getMethods(123123, 123123, "ASDASD"));
+        $this->assertEquals(
+            $this->emptyArray,
+            $this->calculateMethodClass->getMethods(123123123, 123123123, 123123123));
+        $this->assertEquals(
+            $this->emptyArray,
+            $this->calculateMethodClass->getMethods('GB', "aSD!!ASD", 0.100));
+        $this->assertEquals(
+            $this->emptyArray,
+            $this->calculateMethodClass->getMethods('GB', 123123123123, 0.100));
     }
 
+    /**
+     * Test to ensure that only the expected empty array is returned from null
+     * and incorrect data from the CalculateMethod class
+     */
     public function testRoyalMailClassNull()
     {
-        $this->royalMailClass->getMethods(null, 123123123123, 0.100);
-        $this->royalMailClass->getMethods(null, null, 0.100);
-        $this->royalMailClass->getMethods('GB', null, 0.100);
-        $this->royalMailClass->getMethods('GB', null, null);
-        $this->royalMailClass->getMethods('GB', 123123123123, null);
-        $this->royalMailClass->getMethods(null, null, null);
+        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, 123123123123, 0.100));
+        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, null, 0.100));
+        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods('GB', null, 0.100));
+        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods('GB', null, null));
+        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods('GB', 123123123123, null));
+        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, null, null));
     }
 
 }
