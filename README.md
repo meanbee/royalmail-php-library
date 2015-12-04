@@ -15,8 +15,18 @@ $calculateMethodClass = new CalculateMethodClass();
 $calculateMethodClass->getMethods('GB', 20, 0.050);
 ```
 
-This will return an array of objects where each object contains the shipping method name, minimum weight, maximum weight, price of the method, maximum insurance value, and clean shipping method.
+This will return an array of objects where each object contains the shipping method name, minimum weight, maximum weight, price of the method, maximum insurance value, and proper name of the shipping method.
 
 ## Unit Testing
 
 This program is automatically unit tested with phpunit and travis.
+
+## CSV data format
+
+This library uses four CSV files to determine which shipping methods are available: 
+
+1. 1_countryCodeToZone.csv - maps country code to world zone
+2. 2_zoneToDeliveryMethod.csv - maps world zone to all possible shipping methods in that world zone
+3. 3_deliveryMethodMeta.csv - maps delivery method to minimum and maximum price available to the method, max insurance available on method, and the clean method name
+4. 4_deliveryToPrice.csv - maps method name to minimum and maximum weight, max insurance value, price of method, and max insurance value 
+
