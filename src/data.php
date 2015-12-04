@@ -1,57 +1,251 @@
-<?php
-namespace Meanbee;
+<?php namespace Meanbee\RoyalMail;
 
-    /**
-     * NOTICE OF LICENSE
-     *
-     * This source file is subject to the Open Software License (OSL 3.0)
-     * that is bundled with this package in the file LICENSE.txt.
-     * It is also available through the world-wide-web at this URL:
-     * http://opensource.org/licenses/osl-3.0.php
-     *
-     * If you did not receive a copy of the license and are unable to
-     * obtain it through the world-wide-web, please send an email
-     * to support@meanbee.com so we can send you a copy immediately.
-     *
-     * @category   Meanbee
-     * @package    Royalmail-PHP-Library
-     * @copyright  Copyright (c) 2015 Meanbee Internet Solutions (http://www.meanbee.com)
-     * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-     */
-
-// Constant to define the default document root
-define('DOCUMENT_ROOT', dirname(realpath(__FILE__)) . '/');
-
-class data
+class Data
 {
 
-    // Locations of the csv files used
-    protected $_csvCountryCode = DOCUMENT_ROOT . '../data/1_countryToZone.csv';
-    protected $_csvZoneToDeliverMethod = DOCUMENT_ROOT . '../data/2_zoneToDeliveryMethod.csv';
-    protected $_csvDeliveryMethodMeta = DOCUMENT_ROOT . '../data/3_deliveryMethodMeta.csv';
-    protected $_csvDeliveryToPrice = DOCUMENT_ROOT . '../data/4_deliveryToPrice.csv';
+    // Helper variable document root
+    public $documentRoot;
 
     // 1st array used, stores the csv of country to zone
-    public $mappingCountryToZone = array();
+    private $mappingCountryToZone = array();
 
     // 2nd array used, stores the csv of zone to method
-    public $mappingZoneToMethod = array();
+    private $mappingZoneToMethod = array();
 
     // 3rd array used, stores the csv of shipping method
     // to the meta information. This includes the insurance
     // amount, and the corresponding price levels
-    public $mappingMethodToMeta = array();
+    private $mappingMethodToMeta = array();
 
     // 4th array used, stores the csv of the delivery method
     // to the weight and price
-    public $mappingDeliveryToPrice = array();
+    private $mappingDeliveryToPrice = array();
 
-    function __construct()
+    // Array to temporarily hold the sorted country code methods
+    private $sortedCountryCodeMethods = array();
+
+    // Array to temporarily hold the sorted world zone to methods
+    private $sortedZoneToMethods = array();
+
+    // Array to temporarily hold the sorted method meta data
+    private $sortedMethodToMeta = array();
+
+    // Array to temporarily hold the sorted methods
+    private $sortedDeliveryToPrices = array();
+
+    public function __construct(
+        $_csvCountryCode,
+        $_csvZoneToDeliverMethod,
+        $_csvDeliveryMethodMeta,
+        $_csvDeliveryToPrice
+    ) {
+        $this->getDocumentRoot();
+
+        $this->mappingCountryToZone = $this->csvToArray($_csvCountryCode);
+        $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliverMethod);
+        $this->mappingMethodToMeta = $this->csvToArray($_csvDeliveryMethodMeta);
+        $this->mappingDeliveryToPrice = $this->csvToArray($_csvDeliveryToPrice);
+    }
+
+    /**
+     * Method to run the appropriate sorting methods
+     * in the correct order based on the country code,
+     * package value, and package weight. Returns the
+     * sorted values to the RoyalMailMethod class to be
+     * converted into objects.
+     *
+     * @param $country_code
+     * @param $package_value
+     * @param $package_weight
+     *
+     * @return array
+     */
+    public function calculateMethods($country_code, $package_value, $package_weight)
     {
-        $this->mappingCountryToZone = $this->csvToArray($this->_csvCountryCode);
-        $this->mappingZoneToMethod = $this->csvToArray($this->_csvZoneToDeliverMethod);
-        $this->mappingMethodToMeta = $this->csvToArray($this->_csvDeliveryMethodMeta);
-        $this->mappingDeliveryToPrice = $this->csvToArray($this->_csvDeliveryToPrice);
+        $this->sortedCountryCodeMethods = array(
+            $this->getCountryCodeData(
+                $country_code,
+                $this->mappingCountryToZone
+            )
+        );
+
+        $this->sortedZoneToMethods = array(
+            $this->getZoneToMethod(
+                $this->sortedCountryCodeMethods,
+                $this->mappingZoneToMethod
+            )
+        );
+
+        $this->sortedMethodToMeta = array(
+            $this->getMethodToMeta(
+                $package_value,
+                $this->sortedZoneToMethods,
+                $this->mappingMethodToMeta
+            )
+        );
+
+        $this->sortedDeliveryToPrices =
+            $this->getMethodToPrice(
+                $package_weight,
+                $this->sortedMethodToMeta,
+                $this->mappingDeliveryToPrice
+
+            );
+
+        return $this->sortedDeliveryToPrices;
+    }
+
+    /**
+     *
+     * Method to return a 2d array of world zones a country
+     * (by its country code) is located in.
+     *
+     * @param $country_code
+     * @param $mappingCountryToZone
+     *
+     * @return array
+     */
+    private function getCountryCodeData($country_code, $mappingCountryToZone)
+    {
+        // Get All array items that match the country code
+        $countryCodeData = array();
+        foreach ($mappingCountryToZone as $item) {
+            if (isset($item[0]) && $item[0] == $country_code) {
+                foreach ($item as $keys) {
+                    $countryCodeData[] = $keys;
+                }
+            }
+        }
+
+        // Clean up the array removing excess values
+        foreach ($countryCodeData as $key => $value) {
+            if ($value == $country_code) {
+                unset($countryCodeData[$key]);
+            }
+        }
+
+        $countryCodeData = array_values($countryCodeData);
+
+        return $countryCodeData;
+    }
+
+    /**
+     * Method to return a 2d array of possible delivery methods based
+     * on the given world zones a country is in.
+     *
+     * @param $sortedCountryCodeMethods
+     * @param $mappingZoneToMethod
+     *
+     * @return array
+     */
+    private function getZoneToMethod($sortedCountryCodeMethods, $mappingZoneToMethod)
+    {
+        $mappingZoneData = array();
+        foreach ($sortedCountryCodeMethods as $key => $value) {
+            foreach ($value as $zone) {
+                foreach ($mappingZoneToMethod as $item) {
+                    if (isset($item[0]) && $item[0] == $zone) {
+                        foreach ($item as $keys) {
+                            $mappingZoneData[] = $keys;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        // Clean up the array removing excess values
+        foreach ($sortedCountryCodeMethods as $item => $itemValue) {
+            foreach ($itemValue as $zone) {
+                foreach ($mappingZoneData as $key => $value) {
+                    if ($value == $zone) {
+                        unset($mappingZoneData[$key]);
+                    }
+                }
+            }
+
+        }
+
+        $mappingZoneData = array_values($mappingZoneData);
+
+        return $mappingZoneData;
+    }
+
+    /**
+     * Method to return a 2d array of the meta data for each
+     * given allowed shipping method and the given package
+     * value.
+     *
+     * @param $packageValue
+     * @param $sortedZoneToMethods
+     * @param $mappingMethodToMeta
+     *
+     * @return array
+     */
+    private function getMethodToMeta($packageValue, $sortedZoneToMethods, $mappingMethodToMeta)
+    {
+        $mappingZoneMethodData = array();
+        foreach ($sortedZoneToMethods as $key => $value) {
+            foreach ($value as $method) {
+                foreach ($mappingMethodToMeta as $item) {
+                    if (isset($item[0]) && $item[0] == $method) {
+                        if ($packageValue >= $item[1] && $packageValue <= $item[2]) {
+                            $mappingZoneMethodData[] = array($item);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        $mappingZoneMethodData = array_values($mappingZoneMethodData);
+
+        return $mappingZoneMethodData;
+    }
+
+    /**
+     * Method to return a 2d array of sorted shipping methods based on
+     * the weight of the item and the allowed shipping methods. Returns
+     * a 2d array to be converting into objects by the RoyalMailMethod
+     * class. Also adds the pretty text from the meta table to the
+     * correct shipping method, to allow for less text in the delivery
+     * to price csv.
+     *
+     * @param $package_weight
+     * @param $sortedMethodToMeta
+     * @param $mappingDeliveryToPrice
+     *
+     * @return array
+     */
+    private function getMethodToPrice($package_weight, $sortedMethodToMeta, $mappingDeliveryToPrice)
+    {
+        $mappingDeliveryToPriceData = array();
+        foreach ($sortedMethodToMeta as $method) {
+            foreach ($method as $thing) {
+                foreach ($thing as $key => $value) {
+                    foreach ($value as $methodData) {
+                        foreach ($mappingDeliveryToPrice as $item) {
+                            if (isset($item[0]) && $item[0] == $methodData) {
+                                if ($package_weight >= $item[1] && $package_weight <= $item[2]) {
+                                    $mappingDeliveryToPriceData[] = array(
+                                        'shippingMethodName'      => $item[0],
+                                        'minimumWeight'           => $item[1],
+                                        'maximumWeight'           => $item[2],
+                                        'methodPrice'             => $item[3],
+                                        'insuranceValue'          => $item[4],
+                                        'shippingMethodNameClean' => $value[4]
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $mappingDeliveryToPriceData = array_values($mappingDeliveryToPriceData);
+
+        return $mappingDeliveryToPriceData;
     }
 
     /**
@@ -79,5 +273,13 @@ class data
             fclose($handle);
         }
         return $data;
+    }
+
+    /**
+     * Helper function to get the document root for csv files
+     */
+    public function getDocumentRoot()
+    {
+        $this->documentRoot = dirname(realpath(__FILE__)) . '/';
     }
 }
