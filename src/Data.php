@@ -3,9 +3,6 @@
 class Data
 {
 
-    // Helper variable document root
-    public $documentRoot;
-
     // 1st array used, stores the csv of country to zone
     private $mappingCountryToZone = array();
 
@@ -39,8 +36,6 @@ class Data
         $_csvDeliveryMethodMeta,
         $_csvDeliveryToPrice
     ) {
-        $this->getDocumentRoot();
-
         $this->mappingCountryToZone = $this->csvToArray($_csvCountryCode);
         $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliverMethod);
         $this->mappingMethodToMeta = $this->csvToArray($_csvDeliveryMethodMeta);
@@ -273,13 +268,5 @@ class Data
             fclose($handle);
         }
         return $data;
-    }
-
-    /**
-     * Helper function to get the document root for csv files
-     */
-    public function getDocumentRoot()
-    {
-        $this->documentRoot = dirname(realpath(__FILE__)) . '/';
     }
 }

@@ -3,10 +3,24 @@
 class CalculateMethod
 {
 
-    public $_csvCountryCode = '../data/1_countryToZone.csv';
-    public $_csvZoneToDeliverMethod = '../data/2_zoneToDeliveryMethod.csv';
-    public $_csvDeliveryMethodMeta = '../data/3_deliveryMethodMeta.csv';
-    public $_csvDeliveryToPrice = '../data/4_deliveryToPrice.csv';
+    // Helper document root
+    public $documentRoot;
+
+    public $_csvCountryCode;
+    public $_csvZoneToDeliverMethod;
+    public $_csvDeliveryMethodMeta;
+    public $_csvDeliveryToPrice;
+
+    public function __construct()
+    {
+        $this->getDocumentRoot();
+
+        // Set the default csv values
+        $this->_csvCountryCode = $this->documentRoot . '../data/1_countryToZone.csv';
+        $this->_csvZoneToDeliverMethod = $this->documentRoot . '../data/2_zoneToDeliveryMethod.csv';
+        $this->_csvDeliveryMethodMeta = $this->documentRoot . '../data/3_deliveryMethodMeta.csv';
+        $this->_csvDeliveryToPrice = $this->documentRoot . '../data/4_deliveryToPrice.csv';
+    }
 
     /**
      * Method to run the appropriate sorting methods
@@ -36,20 +50,28 @@ class CalculateMethod
 
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
-                    $method = new MethodInterface();
-                    $method->countryCode = $country_code;
-                    $method->shippingMethodName = $item['shippingMethodName'];
-                    $method->minimumWeight = $item['minimumWeight'];
-                    $method->maximumWeight = $item['maximumWeight'];
-                    $method->methodPrice = $item['methodPrice'];
-                    $method->insuranceValue = $item['insuranceValue'];
-                    $method->shippingMethodNameClean = $item['shippingMethodNameClean'];
+                $method = new MethodInterface();
+                $method->countryCode = $country_code;
+                $method->shippingMethodName = $item['shippingMethodName'];
+                $method->minimumWeight = $item['minimumWeight'];
+                $method->maximumWeight = $item['maximumWeight'];
+                $method->methodPrice = $item['methodPrice'];
+                $method->insuranceValue = $item['insuranceValue'];
+                $method->shippingMethodNameClean = $item['shippingMethodNameClean'];
 
-                    $results[] = $method;
+                $results[] = $method;
             }
         }
 
         $results;
         return $results;
+    }
+
+    /**
+     * Helper function to get the document root for csv files
+     */
+    public function getDocumentRoot()
+    {
+        $this->documentRoot = dirname(realpath(__FILE__)) . '/';
     }
 }
