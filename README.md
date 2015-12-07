@@ -30,3 +30,4 @@ This library uses four CSV files to determine which shipping methods are availab
 3. 3_deliveryMethodMeta.csv - maps delivery method to minimum and maximum price available to the method, max insurance available on method, and the clean method name
 4. 4_deliveryToPrice.csv - maps method name to minimum and maximum weight, max insurance value, price of method, and max insurance value 
 
+In the case of extra insurance available on the item, another method must be created. An example can be seen in the 3_deliveryMethodMeta.csv.   
