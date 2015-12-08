@@ -62,8 +62,6 @@ class CalculateMethod
                 $results[] = $method;
             }
         }
-
-        $results;
         return $results;
     }
 
