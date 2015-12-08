@@ -1,6 +1,6 @@
 <?php namespace Meanbee\RoyalMail;
 
-class MethodInterface
+class Method
 {
     // The shipping code name of the method
     public $shippingMethodName;

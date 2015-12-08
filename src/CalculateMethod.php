@@ -50,7 +50,7 @@ class CalculateMethod
 
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
-                $method = new MethodInterface();
+                $method = new Method();
                 $method->countryCode = $country_code;
                 $method->shippingMethodName = $item['shippingMethodName'];
                 $method->minimumWeight = $item['minimumWeight'];
