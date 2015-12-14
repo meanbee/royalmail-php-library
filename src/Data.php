@@ -2,6 +2,13 @@
 
 class Data
 {
+    // Maps the method group name to the clean name and
+    // the related method
+    public $mappingCleanNameToMethod = array();
+
+    // Maps the method group name to the clean name, to
+    // allow for printing just the clean names to the user
+    public $mappingCleanNameMethodGroup = array();
 
     // 1st array used, stores the csv of country to zone
     private $mappingCountryToZone = array();
@@ -34,15 +41,19 @@ class Data
         $_csvCountryCode,
         $_csvZoneToDeliverMethod,
         $_csvDeliveryMethodMeta,
-        $_csvDeliveryToPrice
+        $_csvDeliveryToPrice,
+        $_csvCleanNameToMethod,
+        $_csvCleanNameMethodGroup
     ) {
         $this->mappingCountryToZone = $this->csvToArray($_csvCountryCode);
         $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliverMethod);
         $this->mappingMethodToMeta = $this->csvToArray($_csvDeliveryMethodMeta);
         $this->mappingDeliveryToPrice = $this->csvToArray($_csvDeliveryToPrice);
+        $this->mappingCleanNameToMethod = $this->csvToArray($_csvCleanNameToMethod);
+        $this->mappingCleanNameMethodGroup = $this->csvToArray($_csvCleanNameMethodGroup);
     }
 
-    /**
+    /**[
      * Method to run the appropriate sorting methods
      * in the correct order based on the country code,
      * package value, and package weight. Returns the

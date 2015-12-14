@@ -10,6 +10,8 @@ class CalculateMethod
     public $_csvZoneToDeliverMethod;
     public $_csvDeliveryMethodMeta;
     public $_csvDeliveryToPrice;
+    public $_csvCleanNameToMethod;
+    public $_csvCleanNameMethodGroup;
 
     public function __construct()
     {
@@ -20,6 +22,8 @@ class CalculateMethod
         $this->_csvZoneToDeliverMethod = $this->documentRoot . '../data/2_zoneToDeliveryMethod.csv';
         $this->_csvDeliveryMethodMeta = $this->documentRoot . '../data/3_deliveryMethodMeta.csv';
         $this->_csvDeliveryToPrice = $this->documentRoot . '../data/4_deliveryToPrice.csv';
+        $this->_csvCleanNameToMethod = $this->documentRoot . '../data/5_cleanNameToMethod.csv';
+        $this->_csvCleanNameMethodGroup = $this->documentRoot . '../data/6_cleanNameMethodGroup.csv';
     }
 
     /**
@@ -41,7 +45,9 @@ class CalculateMethod
             $this->_csvCountryCode,
             $this->_csvZoneToDeliverMethod,
             $this->_csvDeliveryMethodMeta,
-            $this->_csvDeliveryToPrice
+            $this->_csvDeliveryToPrice,
+            $this->_csvCleanNameToMethod,
+            $this->_csvCleanNameMethodGroup
         );
 
         $sortedDeliveryMethods = array($data->calculateMethods($country_code, $package_value, $package_weight));
