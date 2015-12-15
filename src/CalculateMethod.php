@@ -65,6 +65,10 @@ class CalculateMethod
                 $method->insuranceValue = $item['insuranceValue'];
                 $method->shippingMethodNameClean = $item['shippingMethodNameClean'];
 
+                if(isset($item['size'])){
+                    $method->size = $item['size'];
+                }
+
                 $results[] = $method;
             }
         }

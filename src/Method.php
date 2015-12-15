@@ -22,4 +22,7 @@ class Method
 
     // The maximum weight the shipping method can accommodate
     public $maximumWeight;
+
+    // The parcel size, only applies to small and medium parcels
+    public $size;
 }

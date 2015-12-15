@@ -2,6 +2,7 @@
 
 class Data
 {
+
     // Maps the method group name to the clean name and
     // the related method
     public $mappingCleanNameToMethod = array();
@@ -227,13 +228,13 @@ class Data
     {
         $mappingDeliveryToPriceData = array();
         foreach ($sortedMethodToMeta as $method) {
-            foreach ($method as $thing) {
-                foreach ($thing as $key => $value) {
+            foreach ($method as $meta) {
+                foreach ($meta as $key => $value) {
                     foreach ($value as $methodData) {
                         foreach ($mappingDeliveryToPrice as $item) {
                             if (isset($item[0]) && $item[0] == $methodData) {
                                 if ($package_weight >= $item[1] && $package_weight <= $item[2]) {
-                                    $mappingDeliveryToPriceData[] = array(
+                                    $objectArray = array(
                                         'shippingMethodName'      => $item[0],
                                         'minimumWeight'           => $item[1],
                                         'maximumWeight'           => $item[2],
@@ -241,6 +242,13 @@ class Data
                                         'insuranceValue'          => $item[4],
                                         'shippingMethodNameClean' => $value[4]
                                     );
+
+                                    if (isset($item[5])) {
+                                        $objectArray['size'] = $item[5];
+                                    }
+
+                                    $mappingDeliveryToPriceData[] = $objectArray;
+
                                 }
                             }
                         }
