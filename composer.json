@@ -1,8 +1,23 @@
 {
-  "name": "meanbee/Royalmail-PHP-Library",
+  "name": "meanbee/royalmail-php-library",
   "type": "Library",
   "description": "PHP library for Royal Mail shipping shipping methods",
-  "homepage": "https://github.com/meanbee/Royalmail-PHP-Library",
+  "homepage": "https://github.com/meanbee/royalmail-php-library",
+  "keywords": [
+    "royalmail",
+    "meanbee",
+    "shipping method",
+    "php library"
+  ],
+
+  "authors": [
+    {
+      "name": "Meanbee Ltd",
+      "email": "hello@meanbee.com",
+      "homepage": "http://www.meanbee.com/",
+      "role": "Company"
+    }
+  ],
 
   "require-dev": {
     "phpunit/phpunit": "4.*"
