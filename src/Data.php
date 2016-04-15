@@ -24,19 +24,19 @@ class Data
     public $mappingCleanNameMethodGroup = array();
 
     // 1st array used, stores the csv of country to zone
-    private $mappingCountryToZone = array();
+    public $mappingCountryToZone = array();
 
     // 2nd array used, stores the csv of zone to method
-    private $mappingZoneToMethod = array();
+    public $mappingZoneToMethod = array();
 
     // 3rd array used, stores the csv of shipping method
     // to the meta information. This includes the insurance
     // amount, and the corresponding price levels
-    private $mappingMethodToMeta = array();
+    public $mappingMethodToMeta = array();
 
     // 4th array used, stores the csv of the delivery method
     // to the weight and price
-    private $mappingDeliveryToPrice = array();
+    public $mappingDeliveryToPrice = array();
 
     // Array to temporarily hold the sorted country code methods
     private $sortedCountryCodeMethods = array();
