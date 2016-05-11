@@ -3,6 +3,17 @@
 class RoyalmailTest extends \PHPUnit_Framework_TestCase
 {
 
+    const METHOD_NAME_ROW_META_CSV = 0;
+    const METHOD_NAME_ROW_CLEANNAME_CSV = 2;
+    const METHOD_NAME_ROW_PRICE_CSV = 0;
+    const METHOD_CLEAN_NAME_ROW_META_CSV = 4;
+    const METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV = 1;
+    const METHOD_CLEAN_NAME_ROW_CLEANNAMEGROUP_CSV = 1;
+    const METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV = 0;
+    const METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV = 0;
+    const INSURANCE_ROW_META_CSV = 3;
+    const INSURANCE_ROW_PRICE_CSV = 4;
+    const INSURANCE_ROW_CLEANNAME_CSV = 5;
 
     /** @var CalculateMethod $calculateMethodClass */
     private $calculateMethodClass;
@@ -431,11 +442,12 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testMethodToMetaVsCleanName()
     {
-        foreach ($this->dataClass->mappingMethodToMeta as $array => $data){
-            foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData)
-            {
-                if ($data[0] ==  $methodData[2]){
-                    $this->assertEquals($data[4], $methodData[1]);
+        foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
+            foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData) {
+                // Check the the names are equal
+                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]) {
+                    $this->assertEquals($data[self::METHOD_CLEAN_NAME_ROW_META_CSV],
+                        $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV]);
                 }
             }
         }
@@ -447,23 +459,23 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testInsuranceValue()
     {
-        foreach ($this->dataClass->mappingMethodToMeta as $array => $data){
-            foreach ($this->dataClass->mappingDeliveryToPrice as $method => $methodData)
-            {
-                if ($data[0] == $methodData[0]){
-                    if ( $methodData[4] != ""){
-                        $this->assertEquals($data[3], $methodData[4]);
+        foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
+            foreach ($this->dataClass->mappingDeliveryToPrice as $method => $methodData) {
+                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]) {
+                    if ($methodData[self::INSURANCE_ROW_PRICE_CSV] != "") {
+                        $this->assertEquals($data[self::INSURANCE_ROW_META_CSV],
+                            $methodData[self::INSURANCE_ROW_PRICE_CSV]);
                         print_r($data, $method);
                     }
                 }
             }
         }
 
-        foreach ($this->dataClass->mappingMethodToMeta as $array => $data){
+        foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
             foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData) {
-                if ($data[0] == $methodData[2]) {
-                    if ($methodData[5] != ""){
-                        $this->assertEquals($data[3], $methodData[5]);
+                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]) {
+                    if ($methodData[self::INSURANCE_ROW_CLEANNAME_CSV] != "") {
+                        $this->assertEquals($data[self::INSURANCE_ROW_META_CSV], $methodData[self::INSURANCE_ROW_CLEANNAME_CSV]);
                         print_r($data, $method);
                     }
                 }
