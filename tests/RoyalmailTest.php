@@ -443,13 +443,20 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
     public function testMethodToMetaVsCleanName()
     {
         foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
+            $methodNotExist = false;
             foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData) {
                 // Check the the names are equal
                 if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]) {
+                    $methodNotExist = true;
                     $this->assertEquals($data[self::METHOD_CLEAN_NAME_ROW_META_CSV],
-                        $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV]);
+                        $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV],
+                        sprintf("Clean names %s and %s were not equal", $data[self::METHOD_CLEAN_NAME_ROW_META_CSV],
+                            $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV]));
                 }
+
             }
+            $this->assertTrue($methodNotExist,
+                sprintf("%s was not found in CleanNameToMethod csv$.", $data[self::METHOD_NAME_ROW_META_CSV]));
         }
     }
 
