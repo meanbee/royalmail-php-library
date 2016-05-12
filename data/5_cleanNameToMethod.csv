@@ -12,8 +12,8 @@
 "specialdelivery9amsaturday","Special Delivery: Guaranteed by 9am Saturday",UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVERY_9AM_SATURDAY_2500,1001,2500,2500
 "firstclasslettersignedfor","Signed For: First Class Letter",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_LETTER,0,50,50
 "firstclasslargelettersignedfor","Signed For: First Class Large Letter",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_LARGE_LETTER,0,50,50
-"firstclasssignedforsmall","Signed For: First Small Parcel",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_SMALL_PARCEL,0,50,50
-"firstclasssignedformedium","Signed For: First Medium Parcel",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_MEDIUM_PARCEL,0,50,50
+"firstclasssignedforsmall","Signed For: First Class Small Parcel",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_SMALL_PARCEL,0,50,50
+"firstclasssignedformedium","Signed For: First Class Medium Parcel",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_MEDIUM_PARCEL,0,50,50
 "secondclasslettersignedfor","Signed For: Second Class Class Letter",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_LETTER,0,50,50
 "secondclasslargelettersignedfor","Signed For: Second Class Class Large Letter",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_LARGE_LETTER,0,50,50
 "secondclasssmallparcelsignedfor","Signed For: Second Class Small Parcel",UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_SMALL_PARCEL,0,50,50
@@ -105,3 +105,8 @@
 "parcelforceworldwideexpressAMsaturday","Parcelforce Worldwide: Express AM Saturday",PARCELFORCE_WORLDWIDE_EXPRESS_AM_SATURDAY,0,200,200
 "parcelforceworldwideexpress24saturday","Parcelforce Worldwide: Express 24 Saturday",PARCELFORCE_WORLDWIDE_EXPRESS_24_SATURDAY,0,100,100
 "parcelforceworldwideexpress48saturday","Parcelforce Worldwide: Express 48 Saturday",PARCELFORCE_WORLDWIDE_EXPRESS_48_SATURDAY,0,100,100
+"parcelforceworldwideexpress9saturday","Parcelforce Worldwide: Express 9",PARCELFORCE_WORLDWIDE_EXPRESS_9_SATURDAY,0,200,200
+"parcelforceworldwideexpress10saturday","Parcelforce Worldwide: Express 10",PARCELFORCE_WORLDWIDE_EXPRESS_10_SATURDAY,0,200,200
+"parcelforceworldwideexpressAMsaturday","Parcelforce Worldwide: Express AM",PARCELFORCE_WORLDWIDE_EXPRESS_AM_SATURDAY,0,200,200
+"parcelforceworldwideexpress24saturday","Parcelforce Worldwide: Express 24",PARCELFORCE_WORLDWIDE_EXPRESS_24_SATURDAY,0,100,100
+"parcelforceworldwideexpress48saturday","Parcelforce Worldwide: Express 48",PARCELFORCE_WORLDWIDE_EXPRESS_48_SATURDAY,0,100,100
