@@ -471,8 +471,10 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
                 if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]) {
                     if ($methodData[self::INSURANCE_ROW_PRICE_CSV] != "") {
                         $this->assertEquals($data[self::INSURANCE_ROW_META_CSV],
-                            $methodData[self::INSURANCE_ROW_PRICE_CSV]);
-                        print_r($data, $method);
+                            $methodData[self::INSURANCE_ROW_PRICE_CSV],
+                            sprintf("Insurance values %s from mappingMethodToMeta and %s from mappingDeliveryToPrice were not equal.",
+                                $data[self::INSURANCE_ROW_META_CSV],
+                                $methodData[self::INSURANCE_ROW_PRICE_CSV]));
                     }
                 }
             }
@@ -482,8 +484,11 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
             foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData) {
                 if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]) {
                     if ($methodData[self::INSURANCE_ROW_CLEANNAME_CSV] != "") {
-                        $this->assertEquals($data[self::INSURANCE_ROW_META_CSV], $methodData[self::INSURANCE_ROW_CLEANNAME_CSV]);
-                        print_r($data, $method);
+                        $this->assertEquals($data[self::INSURANCE_ROW_META_CSV],
+                            $methodData[self::INSURANCE_ROW_CLEANNAME_CSV],
+                            sprintf("Insurance values %s from mappingMethodToMeta and %s from mappingCleanNameToMethod were not equal.",
+                                $data[self::INSURANCE_ROW_META_CSV],
+                                $methodData[self::INSURANCE_ROW_CLEANNAME_CSV]));
                     }
                 }
             }
@@ -501,7 +506,10 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
             foreach ($this->dataClass->mappingCleanNameMethodGroup as $method => $methodData) {
                 if ($data[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV] == $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAMEGROUP_CSV]) {
                     $this->assertEquals($data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
-                        $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV]);
+                        $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV],
+                        sprintf("Clean names %s from mappingCleanNameToMethod and %s from mappingCleanNameToMethodGroup were not equal.",
+                            $data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
+                            $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV]));
                 }
             }
         }
