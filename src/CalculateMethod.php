@@ -56,18 +56,16 @@ class CalculateMethod
 
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
-                $method = new Method();
-                $method->countryCode = $country_code;
-                $method->shippingMethodName = $item['shippingMethodName'];
-                $method->minimumWeight = $item['minimumWeight'];
-                $method->maximumWeight = $item['maximumWeight'];
-                $method->methodPrice = $item['methodPrice'];
-                $method->insuranceValue = $item['insuranceValue'];
-                $method->shippingMethodNameClean = $item['shippingMethodNameClean'];
-
-                if(isset($item['size'])){
-                    $method->size = $item['size'];
-                }
+                $method = new Method(
+                    $item['shippingMethodName'],
+                    $item['shippingMethodNameClean'],
+                    $country_code,
+                    $item['methodPrice'],
+                    $item['insuranceValue'],
+                    $item['minimumWeight'],
+                    $item['maximumWeight'],
+                    isset($item['size']) ? $item['size'] : null
+                );
 
                 $results[] = $method;
             }
