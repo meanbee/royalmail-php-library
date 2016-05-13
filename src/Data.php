@@ -17,38 +17,38 @@ class Data
 
     // Maps the method group name to the clean name and
     // the related method
-    public $mappingCleanNameToMethod = array();
+    public $mappingCleanNameToMethod = [];
 
     // Maps the method group name to the clean name, to
     // allow for printing just the clean names to the user
-    public $mappingCleanNameMethodGroup = array();
+    public $mappingCleanNameMethodGroup = [];
 
     // 1st array used, stores the csv of country to zone
-    public $mappingCountryToZone = array();
+    public $mappingCountryToZone = [];
 
     // 2nd array used, stores the csv of zone to method
-    public $mappingZoneToMethod = array();
+    public $mappingZoneToMethod = [];
 
     // 3rd array used, stores the csv of shipping method
     // to the meta information. This includes the insurance
     // amount, and the corresponding price levels
-    public $mappingMethodToMeta = array();
+    public $mappingMethodToMeta = [];
 
     // 4th array used, stores the csv of the delivery method
     // to the weight and price
-    public $mappingDeliveryToPrice = array();
+    public $mappingDeliveryToPrice = [];
 
     // Array to temporarily hold the sorted country code methods
-    private $sortedCountryCodeMethods = array();
+    private $sortedCountryCodeMethods = [];
 
     // Array to temporarily hold the sorted world zone to methods
-    private $sortedZoneToMethods = array();
+    private $sortedZoneToMethods = [];
 
     // Array to temporarily hold the sorted method meta data
-    private $sortedMethodToMeta = array();
+    private $sortedMethodToMeta = [];
 
     // Array to temporarily hold the sorted methods
-    private $sortedDeliveryToPrices = array();
+    private $sortedDeliveryToPrices = [];
 
     public function __construct(
         $_csvCountryCode,
@@ -81,27 +81,27 @@ class Data
      */
     public function calculateMethods($country_code, $package_value, $package_weight)
     {
-        $this->sortedCountryCodeMethods = array(
+        $this->sortedCountryCodeMethods = [
             $this->getCountryCodeData(
                 $country_code,
                 $this->mappingCountryToZone
             )
-        );
+        ];
 
-        $this->sortedZoneToMethods = array(
+        $this->sortedZoneToMethods = [
             $this->getZoneToMethod(
                 $this->sortedCountryCodeMethods,
                 $this->mappingZoneToMethod
             )
-        );
+        ];
 
-        $this->sortedMethodToMeta = array(
+        $this->sortedMethodToMeta = [
             $this->getMethodToMeta(
                 $package_value,
                 $this->sortedZoneToMethods,
                 $this->mappingMethodToMeta
             )
-        );
+        ];
 
         $this->sortedDeliveryToPrices =
             $this->getMethodToPrice(
@@ -127,7 +127,7 @@ class Data
     private function getCountryCodeData($country_code, $mappingCountryToZone)
     {
         // Get All array items that match the country code
-        $countryCodeData = array();
+        $countryCodeData = [];
         foreach ($mappingCountryToZone as $item) {
             if (isset($item[self::COUNTRY_CODE]) && $item[self::COUNTRY_CODE] == $country_code) {
                 foreach ($item as $keys) {
@@ -159,7 +159,7 @@ class Data
      */
     private function getZoneToMethod($sortedCountryCodeMethods, $mappingZoneToMethod)
     {
-        $mappingZoneData = array();
+        $mappingZoneData = [];
         foreach ($sortedCountryCodeMethods as $key => $value) {
             foreach ($value as $zone) {
                 foreach ($mappingZoneToMethod as $item) {
@@ -203,13 +203,13 @@ class Data
      */
     private function getMethodToMeta($packageValue, $sortedZoneToMethods, $mappingMethodToMeta)
     {
-        $mappingZoneMethodData = array();
+        $mappingZoneMethodData = [];
         foreach ($sortedZoneToMethods as $key => $value) {
             foreach ($value as $method) {
                 foreach ($mappingMethodToMeta as $item) {
                     if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $method) {
                         if ($packageValue >= $item[self::METHOD_MIN_VALUE] && $packageValue <= $item[self::METHOD_MAX_VALUE]) {
-                            $mappingZoneMethodData[] = array($item);
+                            $mappingZoneMethodData[] = [$item];
                         }
 
                     }
@@ -238,7 +238,7 @@ class Data
      */
     private function getMethodToPrice($package_weight, $sortedMethodToMeta, $mappingDeliveryToPrice)
     {
-        $mappingDeliveryToPriceData = array();
+        $mappingDeliveryToPriceData = [];
         foreach ($sortedMethodToMeta as $method) {
             foreach ($method as $meta) {
                 foreach ($meta as $key => $value) {
@@ -246,14 +246,14 @@ class Data
                         foreach ($mappingDeliveryToPrice as $item) {
                             if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $methodData) {
                                 if ($package_weight >= $item[self::METHOD_MIN_WEIGHT] && $package_weight <= $item[self::METHOD_MAX_WEIGHT]) {
-                                    $resultArray = array(
+                                    $resultArray = [
                                         'shippingMethodName'      => $item[self::SHIPPING_METHOD],
                                         'minimumWeight'           => $item[self::METHOD_MIN_WEIGHT],
                                         'maximumWeight'           => $item[self::METHOD_MAX_WEIGHT],
                                         'methodPrice'             => $item[self::METHOD_PRICE],
                                         'insuranceValue'          => $item[self::METHOD_INSURANCE_VALUE],
                                         'shippingMethodNameClean' => $value[self::METHOD_NAME_CLEAN]
-                                    );
+                                    ];
 
                                     if (isset($item[self::METHOD_SIZE])) {
                                         $resultArray['size'] = $item[self::METHOD_SIZE];
@@ -291,7 +291,7 @@ class Data
         }
 
         $header = null;
-        $data = array();
+        $data = [];
         if (($handle = fopen($filename, 'r')) !== false) {
             while (($row = fgetcsv($handle, 1000, $delimiter)) !== false) {
                 $data[] = $row;

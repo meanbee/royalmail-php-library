@@ -39,7 +39,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
             $this->calculateMethodClass->_csvCleanNameMethodGroup
         );
 
-        $this->emptyArray = array();
+        $this->emptyArray = [];
         $this->testDataClassArray = array(
             0  =>
                 array(

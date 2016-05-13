@@ -50,7 +50,7 @@ class CalculateMethod
             $this->_csvCleanNameMethodGroup
         );
 
-        $sortedDeliveryMethods = array($data->calculateMethods($country_code, $package_value, $package_weight));
+        $sortedDeliveryMethods = [$data->calculateMethods($country_code, $package_value, $package_weight)];
 
         $results = [];
 
