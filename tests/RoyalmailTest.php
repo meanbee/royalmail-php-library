@@ -1,4 +1,4 @@
-<?php namespace Meanbee\RoyalMail;
+<?php namespace Meanbee\Royalmail;
 
 class RoyalmailTest extends \PHPUnit_Framework_TestCase
 {
@@ -356,7 +356,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
     /**
      * Test to ensure that the calculate method class is returning
      */
-    public function testRoyalMailClassRealValues()
+    public function testRoyalmailClassRealValues()
     {
         $this->assertNotEmpty($this->calculateMethodClass->getMethods('GB', 20, 0.050));
     }
@@ -364,7 +364,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
     /**
      * Test to compare the returned data from the Data class to expected values
      */
-    public function testRoyalMailMethodRealValues()
+    public function testRoyalmailMethodRealValues()
     {
         $this->assertEquals($this->testDataClassArray, $this->dataClass->calculateMethods('GB', 19.99, 0.050));
     }
@@ -372,7 +372,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
     /**
      * Test to ensure the only the expected empty array is returned from incorrect data to the data class
      */
-    public function testRoyalMailMethodFake()
+    public function testRoyalmailMethodFake()
     {
         $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods('GASD', "aSDASD", "ASDASD"));
         $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(123123123, "asdasd", "asdadasd"));
@@ -386,7 +386,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      * Test to ensure that only the expected empty array is returned from null and incorrect data
      * from the Data class
      */
-    public function testRoyalMailMethodNull()
+    public function testRoyalmailMethodNull()
     {
         $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(null, 123123123123, 0.100));
         $this->assertEquals($this->emptyArray, $this->dataClass->calculateMethods(null, null, 0.100));
@@ -400,7 +400,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      * Test to ensure that only the expected empty array is returned from incorrect
      * data from the CalculateMethod class
      */
-    public function testRoyalMailClassFake()
+    public function testRoyalmailClassFake()
     {
         $this->assertEquals(
             $this->emptyArray,
@@ -426,7 +426,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      * Test to ensure that only the expected empty array is returned from null
      * and incorrect data from the CalculateMethod class
      */
-    public function testRoyalMailClassNull()
+    public function testRoyalmailClassNull()
     {
         $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, 123123123123, 0.100));
         $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, null, 0.100));
