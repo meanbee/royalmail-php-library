@@ -41,306 +41,13 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
 
         $this->emptyArray = array();
         $this->testDataClassArray = array(
-            0  =>
-                array(
-                    'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVERY_1PM_500',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '6.45',
-                    'insuranceValue'          => '500',
-                    'shippingMethodNameClean' => 'Special Delivery: Guaranteed by 1pm',
-                    'size'                    => '',
-                ),
-            1  =>
-                array(
-                    'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVERY_9AM_50',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '18.36',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Special Delivery: Guaranteed by 9am',
-                    'size'                    => '',
-                ),
-            2  =>
-                array(
-                    'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVERY_1PM_SATURDAY_500',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '10.74',
-                    'insuranceValue'          => '500',
-                    'shippingMethodNameClean' => 'Special Delivery: Guaranteed by 1pm Saturday',
-                    'size'                    => '',
-                ),
-            3  =>
-                array(
-                    'shippingMethodName'      => 'UK_GUARANTEED_ROYAL_MAIL_SPECIAL_DELIVERY_9AM_SATURDAY_50',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '21.36',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Special Delivery: Guaranteed by 9am Saturday',
-                    'size'                    => '',
-                ),
-            4  =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_FIRST_CLASS_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '0.63',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Standard First Class Letter',
-                    'size'                    => '',
-                ),
-            5  =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_FIRST_CLASS_LARGE_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '0.95',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Standard First Class Large Letter',
-                    'size'                    => '',
-                ),
-            6  =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_FIRST_CLASS_SMALL_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '3.30',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Standard First Class Small Parcel',
-                    'size'                    => 'SMALL',
-                ),
-            7  =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_FIRST_CLASS_MEDIUM_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '5.65',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Standard First Class Medium Parcel',
-                    'size'                    => 'MEDIUM',
-                ),
-            8  =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_SECOND_CLASS_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '0.54',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Second Class: Letter',
-                    'size'                    => '',
-                ),
-            9  =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_SECOND_CLASS_LARGE_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '0.74',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Second Class: Large Letter',
-                    'size'                    => '',
-                ),
-            10 =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_SECOND_CLASS_SMALL_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '2.80',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Second Class: Small Parcel',
-                    'size'                    => 'SMALL',
-                ),
-            11 =>
-                array(
-                    'shippingMethodName'      => 'UK_STANDARD_SECOND_CLASS_MEDIUM_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '4.89',
-                    'insuranceValue'          => '20',
-                    'shippingMethodNameClean' => 'Second Class: Medium Parcel',
-                    'size'                    => 'MEDIUM',
-                ),
-            12 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '1.73',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: First Class Letter',
-                    'size'                    => '',
-                ),
-            13 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_LARGE_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '2.05',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: First Class Large Letter',
-                    'size'                    => '',
-                ),
-            14 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_SMALL_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '4.40',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: First Class Small Parcel',
-                    'size'                    => 'SMALL',
-                ),
-            15 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_FIRST_CLASS_MEDIUM_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '6.75',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: First Class Medium Parcel',
-                    'size'                    => 'MEDIUM',
-                ),
-            16 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '1.64',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: Second Class Class Letter',
-                    'size'                    => '',
-                ),
-            17 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_LARGE_LETTER',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '0.100',
-                    'methodPrice'             => '1.84',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: Second Class Class Large Letter',
-                    'size'                    => '',
-                ),
-            18 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_SMALL_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '3.90',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: Second Class Small Parcel',
-                    'size'                    => 'SMALL',
-                ),
-            19 =>
-                array(
-                    'shippingMethodName'      => 'UK_CONFIRMED_ROYAL_MAIL_SIGNED_FOR_SECOND_CLASS_MEDIUM_PARCEL',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '1.000',
-                    'methodPrice'             => '5.99',
-                    'insuranceValue'          => '50',
-                    'shippingMethodNameClean' => 'Signed For: Second Class Medium Parcel',
-                    'size'                    => 'MEDIUM',
-                ),
-            20 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_9',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '39.48',
-                    'insuranceValue'          => '200',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 9',
-                    'size'                    => '',
-                ),
-            21 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_10',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '29.46',
-                    'insuranceValue'          => '200',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 10',
-                    'size'                    => '',
-                ),
-            22 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_AM',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '19.49',
-                    'insuranceValue'          => '200',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express AM',
-                    'size'                    => '',
-                ),
-            23 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_24',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '16.49',
-                    'insuranceValue'          => '100',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 24',
-                    'size'                    => '',
-                ),
-            24 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_48',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '11.99',
-                    'insuranceValue'          => '100',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 48',
-                    'size'                    => '',
-                ),
-            25 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_9_SATURDAY',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '48.48',
-                    'insuranceValue'          => '200',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 9 Saturday',
-                    'size'                    => '',
-                ),
-            26 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_10_SATURDAY',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '38.48',
-                    'insuranceValue'          => '200',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 10 Saturday',
-                    'size'                    => '',
-                ),
-            27 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_AM_SATURDAY',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '28.49',
-                    'insuranceValue'          => '200',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express AM Saturday',
-                    'size'                    => '',
-                ),
-            28 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_24_SATURDAY',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '25.49',
-                    'insuranceValue'          => '100',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 24 Saturday',
-                    'size'                    => '',
-                ),
-            29 =>
-                array(
-                    'shippingMethodName'      => 'PARCELFORCE_WORLDWIDE_EXPRESS_48_SATURDAY',
-                    'minimumWeight'           => '0.001',
-                    'maximumWeight'           => '2.000',
-                    'methodPrice'             => '21.99',
-                    'insuranceValue'          => '100',
-                    'shippingMethodNameClean' => 'Parcelforce Worldwide: Express 48 Saturday',
-                    'size'                    => '',
-                ),
+            'shippingMethodName'      => 'string',
+            'minimumWeight'           => 'string',
+            'maximumWeight'           => 'string',
+            'methodPrice'             => 'string',
+            'insuranceValue'          => 'string',
+            'shippingMethodNameClean' => 'string',
+            'size'                    => 'string',
         );
     }
 
@@ -366,7 +73,24 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailMethodRealValues()
     {
-        $this->assertEquals($this->testDataClassArray, $this->dataClass->calculateMethods('GB', 19.99, 0.050));
+        $calculatedMethods = $this->dataClass->calculateMethods('GB', 19.99, 0.050);
+        foreach ($calculatedMethods as $calculatedMethod => $arrayContents) {
+            $this->assertEquals(gettype($this->testDataClassArray['shippingMethodName']),
+                gettype($arrayContents['shippingMethodName']), "shippingMethodName array value not equal to correct type.");
+            $this->assertEquals(gettype($this->testDataClassArray['minimumWeight']),
+                gettype($arrayContents['minimumWeight']), "minimumWeight array value not equal to correct type.");
+            $this->assertEquals(gettype($this->testDataClassArray['maximumWeight']),
+                gettype($arrayContents['maximumWeight']), "maximumWeight array value not equal to correct type.");
+            $this->assertEquals(gettype($this->testDataClassArray['methodPrice']),
+                gettype($arrayContents['methodPrice']), "methodPrice array value not equal to correct type.");
+            $this->assertEquals(gettype($this->testDataClassArray['insuranceValue']),
+                gettype($arrayContents['insuranceValue']), "insuranceValue array value not equal to correct type.");
+            $this->assertEquals(gettype($this->testDataClassArray['shippingMethodNameClean']),
+                gettype($arrayContents['shippingMethodNameClean']), "shippingMethodNameClean array value not equal to correct type.");
+            $this->assertEquals(gettype($this->testDataClassArray['size']), gettype($arrayContents['size']),
+                "size array value not equal to correct type.");
+
+        }
     }
 
     /**
