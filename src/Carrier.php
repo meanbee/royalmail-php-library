@@ -1,6 +1,6 @@
 <?php namespace Meanbee\Royalmail;
 
-class CalculateMethod
+class Carrier implements CarrierInterface
 {
 
     // Helper document root
@@ -39,7 +39,7 @@ class CalculateMethod
      *
      * @return array
      */
-    public function getMethods($country_code, $package_value, $package_weight)
+    public function getRates($country_code, $package_value, $package_weight)
     {
         $data = new Data(
             $this->_csvCountryCode,

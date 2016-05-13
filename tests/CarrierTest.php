@@ -1,6 +1,6 @@
 <?php namespace Meanbee\Royalmail;
 
-class RoyalmailTest extends \PHPUnit_Framework_TestCase
+class CarrierTest extends \PHPUnit_Framework_TestCase
 {
 
     const METHOD_NAME_ROW_META_CSV = 0;
@@ -15,8 +15,8 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
     const INSURANCE_ROW_PRICE_CSV = 4;
     const INSURANCE_ROW_CLEANNAME_CSV = 5;
 
-    /** @var CalculateMethod $calculateMethodClass */
-    private $calculateMethodClass;
+    /** @var Carrier $carrier */
+    private $carrier;
 
     /** @var Data $dataClass */
     private $dataClass;
@@ -28,15 +28,15 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        /** @var CalculateMethod */
-        $this->calculateMethodClass = new CalculateMethod();
+        /** @var Carrier */
+        $this->carrier = new Carrier();
         $this->dataClass = new Data(
-            $this->calculateMethodClass->_csvCountryCode,
-            $this->calculateMethodClass->_csvZoneToDeliverMethod,
-            $this->calculateMethodClass->_csvDeliveryMethodMeta,
-            $this->calculateMethodClass->_csvDeliveryToPrice,
-            $this->calculateMethodClass->_csvCleanNameToMethod,
-            $this->calculateMethodClass->_csvCleanNameMethodGroup
+            $this->carrier->_csvCountryCode,
+            $this->carrier->_csvZoneToDeliverMethod,
+            $this->carrier->_csvDeliveryMethodMeta,
+            $this->carrier->_csvDeliveryToPrice,
+            $this->carrier->_csvCleanNameToMethod,
+            $this->carrier->_csvCleanNameMethodGroup
         );
 
         $this->emptyArray = [];
@@ -56,7 +56,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
-        $this->calculateMethodClass = null;
+        $this->carrier = null;
         $this->dataClass = null;
     }
 
@@ -65,7 +65,7 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailClassRealValues()
     {
-        $this->assertNotEmpty($this->calculateMethodClass->getMethods('GB', 20, 0.050));
+        $this->assertNotEmpty($this->carrier->getRates('GB', 20, 0.050));
     }
 
     /**
@@ -128,22 +128,22 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             $this->emptyArray,
-            $this->calculateMethodClass->getMethods('GASD', "aSDASD", "ASDASD"));
+            $this->carrier->getRates('GASD', "aSDASD", "ASDASD"));
         $this->assertEquals(
             $this->emptyArray,
-            $this->calculateMethodClass->getMethods(123123123, "asdasd", "asdadasd"));
+            $this->carrier->getRates(123123123, "asdasd", "asdadasd"));
         $this->assertEquals(
             $this->emptyArray,
-            $this->calculateMethodClass->getMethods(123123, 123123, "ASDASD"));
+            $this->carrier->getRates(123123, 123123, "ASDASD"));
         $this->assertEquals(
             $this->emptyArray,
-            $this->calculateMethodClass->getMethods(123123123, 123123123, 123123123));
+            $this->carrier->getRates(123123123, 123123123, 123123123));
         $this->assertEquals(
             $this->emptyArray,
-            $this->calculateMethodClass->getMethods('GB', "aSD!!ASD", 0.100));
+            $this->carrier->getRates('GB', "aSD!!ASD", 0.100));
         $this->assertEquals(
             $this->emptyArray,
-            $this->calculateMethodClass->getMethods('GB', 123123123123, 0.100));
+            $this->carrier->getRates('GB', 123123123123, 0.100));
     }
 
     /**
@@ -152,12 +152,12 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailClassNull()
     {
-        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, 123123123123, 0.100));
-        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, null, 0.100));
-        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods('GB', null, 0.100));
-        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods('GB', null, null));
-        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods('GB', 123123123123, null));
-        $this->assertEquals($this->emptyArray, $this->calculateMethodClass->getMethods(null, null, null));
+        $this->assertEquals($this->emptyArray, $this->carrier->getRates(null, 123123123123, 0.100));
+        $this->assertEquals($this->emptyArray, $this->carrier->getRates(null, null, 0.100));
+        $this->assertEquals($this->emptyArray, $this->carrier->getRates('GB', null, 0.100));
+        $this->assertEquals($this->emptyArray, $this->carrier->getRates('GB', null, null));
+        $this->assertEquals($this->emptyArray, $this->carrier->getRates('GB', 123123123123, null));
+        $this->assertEquals($this->emptyArray, $this->carrier->getRates(null, null, null));
     }
 
     /**
