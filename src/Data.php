@@ -15,51 +15,59 @@ class Data
     const METHOD_NAME_CLEAN = 4;
     const METHOD_SIZE = 5;
 
-    // Maps the method group name to the clean name and
-    // the related method
-    public $mappingCleanNameToMethod = [];
+    /**
+     * 
+     *
+     * @var array
+     */
+    protected $mappingCleanNameToMethod = [];
 
-    // Maps the method group name to the clean name, to
-    // allow for printing just the clean names to the user
-    public $mappingCleanNameMethodGroup = [];
+    /**
+     * Maps the method group name to the clean name, to allow for printing just the clean names to the user
+     *
+     * @var array
+     */
+    protected $mappingCleanNameMethodGroup = [];
 
-    // 1st array used, stores the csv of country to zone
-    public $mappingCountryToZone = [];
+    /**
+     * Maps countries to zones.
+     *
+     * @var array
+     */
+    protected $mappingCountryToZone = [];
 
-    // 2nd array used, stores the csv of zone to method
-    public $mappingZoneToMethod = [];
+    /**
+     * Maps zones to methods.
+     *
+     * @var array
+     */
+    protected $mappingZoneToMethod = [];
 
-    // 3rd array used, stores the csv of shipping method
-    // to the meta information. This includes the insurance
-    // amount, and the corresponding price levels
-    public $mappingMethodToMeta = [];
+    /**
+     * Map methods to meta information. This includes the insurance amount, and the corresponding price levels
+     *
+     * @var array
+     */
+    protected $mappingMethodToMeta = [];
 
-    // 4th array used, stores the csv of the delivery method
-    // to the weight and price
-    public $mappingDeliveryToPrice = [];
-
-    // Array to temporarily hold the sorted country code methods
-    private $sortedCountryCodeMethods = [];
-
-    // Array to temporarily hold the sorted world zone to methods
-    private $sortedZoneToMethods = [];
-
-    // Array to temporarily hold the sorted method meta data
-    private $sortedMethodToMeta = [];
-
-    // Array to temporarily hold the sorted methods
-    private $sortedDeliveryToPrices = [];
+    /**
+     * Maps method to prices (rates) based on weight boundaries
+     *
+     * @var array
+     */
+    protected $mappingDeliveryToPrice = [];
 
     public function __construct(
         $_csvCountryCode,
-        $_csvZoneToDeliverMethod,
+        $_csvZoneToDeliveryMethod,
         $_csvDeliveryMethodMeta,
         $_csvDeliveryToPrice,
         $_csvCleanNameToMethod,
         $_csvCleanNameMethodGroup
-    ) {
+    )
+    {
         $this->mappingCountryToZone = $this->csvToArray($_csvCountryCode);
-        $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliverMethod);
+        $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliveryMethod);
         $this->mappingMethodToMeta = $this->csvToArray($_csvDeliveryMethodMeta);
         $this->mappingDeliveryToPrice = $this->csvToArray($_csvDeliveryToPrice);
         $this->mappingCleanNameToMethod = $this->csvToArray($_csvCleanNameToMethod);
@@ -81,37 +89,34 @@ class Data
      */
     public function calculateMethods($country_code, $package_value, $package_weight)
     {
-        $this->sortedCountryCodeMethods = [
+        $sortedCountryCodeMethods = [
             $this->getCountryCodeData(
                 $country_code,
                 $this->mappingCountryToZone
             )
         ];
 
-        $this->sortedZoneToMethods = [
+        $sortedZoneToMethods = [
             $this->getZoneToMethod(
-                $this->sortedCountryCodeMethods,
+                $sortedCountryCodeMethods,
                 $this->mappingZoneToMethod
             )
         ];
 
-        $this->sortedMethodToMeta = [
+        $sortedMethodToMeta = [
             $this->getMethodToMeta(
                 $package_value,
-                $this->sortedZoneToMethods,
+                $sortedZoneToMethods,
                 $this->mappingMethodToMeta
             )
         ];
 
-        $this->sortedDeliveryToPrices =
-            $this->getMethodToPrice(
-                $package_weight,
-                $this->sortedMethodToMeta,
-                $this->mappingDeliveryToPrice
+        return $this->getMethodToPrice(
+            $package_weight,
+            $sortedMethodToMeta,
+            $this->mappingDeliveryToPrice
 
-            );
-
-        return $this->sortedDeliveryToPrices;
+        );
     }
 
     /**
@@ -247,11 +252,11 @@ class Data
                             if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $methodData) {
                                 if ($package_weight >= $item[self::METHOD_MIN_WEIGHT] && $package_weight <= $item[self::METHOD_MAX_WEIGHT]) {
                                     $resultArray = [
-                                        'shippingMethodName'      => $item[self::SHIPPING_METHOD],
-                                        'minimumWeight'           => $item[self::METHOD_MIN_WEIGHT],
-                                        'maximumWeight'           => $item[self::METHOD_MAX_WEIGHT],
-                                        'methodPrice'             => $item[self::METHOD_PRICE],
-                                        'insuranceValue'          => $item[self::METHOD_INSURANCE_VALUE],
+                                        'shippingMethodName' => $item[self::SHIPPING_METHOD],
+                                        'minimumWeight' => $item[self::METHOD_MIN_WEIGHT],
+                                        'maximumWeight' => $item[self::METHOD_MAX_WEIGHT],
+                                        'methodPrice' => $item[self::METHOD_PRICE],
+                                        'insuranceValue' => $item[self::METHOD_INSURANCE_VALUE],
                                         'shippingMethodNameClean' => $value[self::METHOD_NAME_CLEAN]
                                     ];
 
@@ -299,5 +304,65 @@ class Data
             fclose($handle);
         }
         return $data;
+    }
+
+    /**
+     * Maps the method group name to the clean name and the related method
+     *
+     * @return array
+     */
+    public function getMappingCleanNameToMethod()
+    {
+        return $this->mappingCleanNameToMethod;
+    }
+
+    /**
+     * Maps the method group name to the clean name, to allow for printing just the clean names to the user
+     *
+     * @return array
+     */
+    public function getMappingCleanNameMethodGroup()
+    {
+        return $this->mappingCleanNameMethodGroup;
+    }
+
+    /**
+     * Maps countries to zones.
+     *
+     * @return array
+     */
+    public function getMappingCountryToZone()
+    {
+        return $this->mappingCountryToZone;
+    }
+
+    /**
+     * Maps zones to methods.
+     *
+     * @return array
+     */
+    public function getMappingZoneToMethod()
+    {
+        return $this->mappingZoneToMethod;
+    }
+
+    /**
+     * Map methods to meta information. This includes the insurance amount, and the corresponding price levels
+     *
+     * @return array
+     */
+    public function getMappingMethodToMeta()
+    {
+        return $this->mappingMethodToMeta;
+    }
+
+    /**
+     * Maps method to prices (rates) based on weight boundaries
+     *
+     * @return array
+     */
+    public function getMappingDeliveryToPrice()
+    {
+        return $this->mappingDeliveryToPrice;
     }
 }
