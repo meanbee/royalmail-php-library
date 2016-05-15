@@ -41,13 +41,13 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
 
         $this->emptyArray = [];
         $this->testDataClassArray = array(
-            'shippingMethodName'      => 'string',
-            'minimumWeight'           => 'string',
-            'maximumWeight'           => 'string',
-            'methodPrice'             => 'string',
-            'insuranceValue'          => 'string',
-            'shippingMethodNameClean' => 'string',
-            'size'                    => 'string',
+            'shippingMethodName'      => 'test',
+            'minimumWeight'           => 1.00,
+            'maximumWeight'           => 5.00,
+            'methodPrice'             => 0.99,
+            'insuranceValue'          => 10,
+            'shippingMethodNameClean' => 'Test',
+            'size'                    => 'Small',
         );
     }
 

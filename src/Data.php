@@ -248,10 +248,10 @@ class Data
                                 if ($package_weight >= $item[self::METHOD_MIN_WEIGHT] && $package_weight <= $item[self::METHOD_MAX_WEIGHT]) {
                                     $resultArray = [
                                         'shippingMethodName'      => $item[self::SHIPPING_METHOD],
-                                        'minimumWeight'           => $item[self::METHOD_MIN_WEIGHT],
-                                        'maximumWeight'           => $item[self::METHOD_MAX_WEIGHT],
-                                        'methodPrice'             => $item[self::METHOD_PRICE],
-                                        'insuranceValue'          => $item[self::METHOD_INSURANCE_VALUE],
+                                        'minimumWeight'           => (double)$item[self::METHOD_MIN_WEIGHT],
+                                        'maximumWeight'           => (double)$item[self::METHOD_MAX_WEIGHT],
+                                        'methodPrice'             => (double)$item[self::METHOD_PRICE],
+                                        'insuranceValue'          => (int)$item[self::METHOD_INSURANCE_VALUE],
                                         'shippingMethodNameClean' => $value[self::METHOD_NAME_CLEAN]
                                     ];
 
