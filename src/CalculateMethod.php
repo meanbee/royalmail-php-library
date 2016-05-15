@@ -6,6 +6,11 @@ class CalculateMethod
     // Helper document root
     public $documentRoot;
 
+    /**
+     * @var Data
+     */
+    protected $data;
+
     public $_csvCountryCode;
     public $_csvZoneToDeliverMethod;
     public $_csvDeliveryMethodMeta;
@@ -13,7 +18,11 @@ class CalculateMethod
     public $_csvCleanNameToMethod;
     public $_csvCleanNameMethodGroup;
 
-    public function __construct()
+    /**
+     * CalculateMethod constructor.
+     * @param null|Data $data
+     */
+    public function __construct($data = null)
     {
         $this->getDocumentRoot();
 
@@ -24,6 +33,15 @@ class CalculateMethod
         $this->_csvDeliveryToPrice = $this->documentRoot . '../data/4_deliveryToPrice.csv';
         $this->_csvCleanNameToMethod = $this->documentRoot . '../data/5_cleanNameToMethod.csv';
         $this->_csvCleanNameMethodGroup = $this->documentRoot . '../data/6_cleanNameMethodGroup.csv';
+
+        $this->data = isset($data) ? $data : new Data(
+            $this->_csvCountryCode,
+            $this->_csvZoneToDeliverMethod,
+            $this->_csvDeliveryMethodMeta,
+            $this->_csvDeliveryToPrice,
+            $this->_csvCleanNameToMethod,
+            $this->_csvCleanNameMethodGroup
+        );
     }
 
     /**
@@ -41,16 +59,9 @@ class CalculateMethod
      */
     public function getMethods($country_code, $package_value, $package_weight)
     {
-        $data = new Data(
-            $this->_csvCountryCode,
-            $this->_csvZoneToDeliverMethod,
-            $this->_csvDeliveryMethodMeta,
-            $this->_csvDeliveryToPrice,
-            $this->_csvCleanNameToMethod,
-            $this->_csvCleanNameMethodGroup
-        );
 
-        $sortedDeliveryMethods = [$data->calculateMethods($country_code, $package_value, $package_weight)];
+
+        $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight)];
 
         $results = [];
 
@@ -65,7 +76,7 @@ class CalculateMethod
                 $method->insuranceValue = $item['insuranceValue'];
                 $method->shippingMethodNameClean = $item['shippingMethodNameClean'];
 
-                if(isset($item['size'])){
+                if (isset($item['size'])) {
                     $method->size = $item['size'];
                 }
 
