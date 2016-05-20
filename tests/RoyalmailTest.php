@@ -31,12 +31,12 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
         /** @var CalculateMethod */
         $this->calculateMethodClass = new CalculateMethod();
         $this->dataClass = new Data(
-            $this->calculateMethodClass->_csvCountryCode,
-            $this->calculateMethodClass->_csvZoneToDeliverMethod,
-            $this->calculateMethodClass->_csvDeliveryMethodMeta,
-            $this->calculateMethodClass->_csvDeliveryToPrice,
-            $this->calculateMethodClass->_csvCleanNameToMethod,
-            $this->calculateMethodClass->_csvCleanNameMethodGroup
+            $this->calculateMethodClass->getCsvCountryCode(),
+            $this->calculateMethodClass->getCsvZoneToDeliveryMethod(),
+            $this->calculateMethodClass->getCsvDeliveryMethodMeta(),
+            $this->calculateMethodClass->getCsvDeliveryToPrice(),
+            $this->calculateMethodClass->getCsvCleanNameToMethod(),
+            $this->calculateMethodClass->getCsvCleanNameMethodGroup()
         );
 
         $this->emptyArray = [];
@@ -166,9 +166,9 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testMethodToMetaVsCleanName()
     {
-        foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
+        foreach ($this->dataClass->getMappingMethodToMeta() as $array => $data) {
             $methodNotExist = false;
-            foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData) {
+            foreach ($this->dataClass->getMappingCleanNameToMethod() as $method => $methodData) {
                 // Check the the names are equal
                 if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]) {
                     $methodNotExist = true;
@@ -190,8 +190,8 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testInsuranceValue()
     {
-        foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
-            foreach ($this->dataClass->mappingDeliveryToPrice as $method => $methodData) {
+        foreach ($this->dataClass->getMappingMethodToMeta() as $array => $data) {
+            foreach ($this->dataClass->getMappingDeliveryToPrice() as $method => $methodData) {
                 if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]) {
                     if ($methodData[self::INSURANCE_ROW_PRICE_CSV] != "") {
                         $this->assertEquals($data[self::INSURANCE_ROW_META_CSV],
@@ -204,8 +204,8 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
             }
         }
 
-        foreach ($this->dataClass->mappingMethodToMeta as $array => $data) {
-            foreach ($this->dataClass->mappingCleanNameToMethod as $method => $methodData) {
+        foreach ($this->dataClass->getMappingMethodToMeta() as $array => $data) {
+            foreach ($this->dataClass->getMappingCleanNameToMethod() as $method => $methodData) {
                 if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]) {
                     if ($methodData[self::INSURANCE_ROW_CLEANNAME_CSV] != "") {
                         $this->assertEquals($data[self::INSURANCE_ROW_META_CSV],
@@ -226,8 +226,8 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
      */
     public function testCleanNameVsMethodGroup()
     {
-        foreach ($this->dataClass->mappingCleanNameToMethod as $array => $data) {
-            foreach ($this->dataClass->mappingCleanNameMethodGroup as $method => $methodData) {
+        foreach ($this->dataClass->getMappingCleanNameToMethod() as $array => $data) {
+            foreach ($this->dataClass->getMappingCleanNameMethodGroup() as $method => $methodData) {
                 if ($data[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV] == $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAMEGROUP_CSV]) {
                     $this->assertEquals($data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
                         $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV],

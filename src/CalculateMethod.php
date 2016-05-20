@@ -7,16 +7,53 @@ class CalculateMethod
     public $documentRoot;
 
     /**
-     * @var Data
+     * CSV file location for CountryCodes
+     * @var string
+     */
+    protected $_csvCountryCode;
+
+    /**
+     * CSV file location for zone to methods
+     *
+     * @var string
+     */
+    protected $_csvZoneToDeliveryMethod;
+
+    /**
+     * CSV file location for method meta info
+     *
+     * @var string
+     */
+    protected $_csvDeliveryMethodMeta;
+
+    /**
+     * CSV file location for method to price
+     *
+     * @var string
+     */
+    protected $_csvDeliveryToPrice;
+
+    /**
+     * CSV file location for method codes to user-friendly label.
+     *
+     * @var string
+     */
+    protected $_csvCleanNameToMethod;
+
+    /**
+     * CSV file location for mapping of method to method group
+     *
+     * @var string
+     */
+    protected $_csvCleanNameMethodGroup;
+
+
+    /**
+     * Data resource class
+     *
+     * @var Data|null
      */
     protected $data;
-
-    public $_csvCountryCode;
-    public $_csvZoneToDeliverMethod;
-    public $_csvDeliveryMethodMeta;
-    public $_csvDeliveryToPrice;
-    public $_csvCleanNameToMethod;
-    public $_csvCleanNameMethodGroup;
 
     /**
      * CalculateMethod constructor.
@@ -28,7 +65,7 @@ class CalculateMethod
 
         // Set the default csv values
         $this->_csvCountryCode = $this->documentRoot . '../data/1_countryToZone.csv';
-        $this->_csvZoneToDeliverMethod = $this->documentRoot . '../data/2_zoneToDeliveryMethod.csv';
+        $this->_csvZoneToDeliveryMethod = $this->documentRoot . '../data/2_zoneToDeliveryMethod.csv';
         $this->_csvDeliveryMethodMeta = $this->documentRoot . '../data/3_deliveryMethodMeta.csv';
         $this->_csvDeliveryToPrice = $this->documentRoot . '../data/4_deliveryToPrice.csv';
         $this->_csvCleanNameToMethod = $this->documentRoot . '../data/5_cleanNameToMethod.csv';
@@ -36,7 +73,7 @@ class CalculateMethod
 
         $this->data = isset($data) ? $data : new Data(
             $this->_csvCountryCode,
-            $this->_csvZoneToDeliverMethod,
+            $this->_csvZoneToDeliveryMethod,
             $this->_csvDeliveryMethodMeta,
             $this->_csvDeliveryToPrice,
             $this->_csvCleanNameToMethod,
@@ -60,25 +97,22 @@ class CalculateMethod
     public function getMethods($country_code, $package_value, $package_weight)
     {
 
-
         $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight)];
 
         $results = [];
 
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
-                $method = new Method();
-                $method->countryCode = $country_code;
-                $method->shippingMethodName = $item['shippingMethodName'];
-                $method->minimumWeight = $item['minimumWeight'];
-                $method->maximumWeight = $item['maximumWeight'];
-                $method->methodPrice = $item['methodPrice'];
-                $method->insuranceValue = $item['insuranceValue'];
-                $method->shippingMethodNameClean = $item['shippingMethodNameClean'];
-
-                if (isset($item['size'])) {
-                    $method->size = $item['size'];
-                }
+                $method = new Method(
+                    $item['shippingMethodName'],
+                    $item['shippingMethodNameClean'],
+                    $country_code,
+                    $item['methodPrice'],
+                    $item['insuranceValue'],
+                    $item['minimumWeight'],
+                    $item['maximumWeight'],
+                    isset($item['size']) ? $item['size'] : null
+                );
 
                 $results[] = $method;
             }
@@ -94,7 +128,7 @@ class CalculateMethod
     public function getAllMethods()
     {
         $methods = [];
-        foreach ($this->data->mappingCleanNameMethodGroup as $item) {
+        foreach ($this->data->getMappingCleanNameMethodGroup() as $item) {
             $methods[$item[0]] = $item[1];
         }
 
@@ -107,5 +141,65 @@ class CalculateMethod
     public function getDocumentRoot()
     {
         $this->documentRoot = dirname(realpath(__FILE__)) . '/';
+    }
+
+    /**
+     * CSV file location for CountryCodes
+     *
+     * @return string
+     */
+    public function getCsvCountryCode()
+    {
+        return $this->_csvCountryCode;
+    }
+
+    /**
+     * CSV file location for zone to methods
+     *
+     * @return string
+     */
+    public function getCsvZoneToDeliveryMethod()
+    {
+        return $this->_csvZoneToDeliveryMethod;
+    }
+
+    /**
+     * CSV file location for method meta info
+     *
+     * @return string
+     */
+    public function getCsvDeliveryMethodMeta()
+    {
+        return $this->_csvDeliveryMethodMeta;
+    }
+
+    /**
+     * CSV file location for method to price
+     *
+     * @return string
+     */
+    public function getCsvDeliveryToPrice()
+    {
+        return $this->_csvDeliveryToPrice;
+    }
+
+    /**
+     * CSV file location for method codes to user-friendly label.
+     *
+     * @return string
+     */
+    public function getCsvCleanNameToMethod()
+    {
+        return $this->_csvCleanNameToMethod;
+    }
+
+    /**
+     * CSV file location for mapping of method to method group
+     *
+     * @return string
+     */
+    public function getCsvCleanNameMethodGroup()
+    {
+        return $this->_csvCleanNameMethodGroup;
     }
 }
