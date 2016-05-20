@@ -238,4 +238,22 @@ class RoyalmailTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
+
+    /**
+     * Test get a full list of royal mail methods
+     */
+    public function testGetAllMethods()
+    {
+        /** @var array $methods */
+        $methods = $this->calculateMethodClass->getAllMethods();
+
+        $this->assertInternalType('array', $methods);
+        $this->assertTrue(count($methods) > 0);
+
+        foreach ($methods as $code => $name) {
+            $this->assertInternalType('string', $code);
+            $this->assertFalse(strpos($code, ' '));
+            $this->assertInternalType('string', $name);
+        }
+    }
 }

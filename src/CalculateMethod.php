@@ -87,6 +87,21 @@ class CalculateMethod
     }
 
     /**
+     * Get full list of available RoyalMail Methods
+     *
+     * @return array
+     */
+    public function getAllMethods()
+    {
+        $methods = [];
+        foreach ($this->data->mappingCleanNameMethodGroup as $item) {
+            $methods[$item[0]] = $item[1];
+        }
+
+        return $methods;
+    }
+
+    /**
      * Helper function to get the document root for csv files
      */
     public function getDocumentRoot()
