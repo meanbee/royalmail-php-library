@@ -100,7 +100,9 @@ class Carrier implements CarrierInterface
      *
      * The $ignore_package_value parameter allows for the
      * value of the packages to be ignored in the calculation
-     * at the users discretion.
+     * at the users discretion. This can be useful if the user
+     * wants to get all available methods for the country code
+     * and weight, ignoring the price of the package.
      *
      * @param $country_code
      * @param $package_value
@@ -112,11 +114,7 @@ class Carrier implements CarrierInterface
     public function getRates($country_code, $package_value, $package_weight, $ignore_package_value = false)
     {
 
-        if ($ignore_package_value == true){
-            $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight, $ignore_package_value)];
-        } else {
-            $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight)];
-        }
+        $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight, $ignore_package_value)];
 
         $results = [];
 
