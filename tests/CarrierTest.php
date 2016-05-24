@@ -69,6 +69,35 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test to ensure that the calculate method class is returning rates with
+     * the ignore insurance flag set to true. 37 methods are expected to be
+     * returned.
+     */
+    public function testRoyalmailClassRealValuesAll()
+    {
+        $this->assertCount(
+            37,
+            $this->carrier->getRates('GB', 20, 0.050, true),
+            "Array size from getRates did not match on
+            the expected size of 37 methods returned."
+        );
+    }
+
+    /**
+     * Test to ensure that the calculate method class is returning rates with
+     * the ignore insurance flag set to false. 30 methods are expected to be
+     * returned.
+     */
+    public function testRoyalmailClassRealValuesAllFalse()
+    {
+        $this->assertCount(
+            30,
+            $this->carrier->getRates('GB', 20, 0.050, false),
+            "Array size from getRates did not match on
+             the expected size of 37 methods returned.");
+    }
+
+    /**
      * Test to compare the returned data from the Data class to expected values
      */
     public function testRoyalmailMethodRealValues()

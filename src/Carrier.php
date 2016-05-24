@@ -98,16 +98,23 @@ class Carrier implements CarrierInterface
      * sorted values to the RoyalMailMethod class to be
      * converted into objects.
      *
+     * The $ignore_package_value parameter allows for the
+     * value of the packages to be ignored in the calculation
+     * at the users discretion. This can be useful if the user
+     * wants to get all available methods for the country code
+     * and weight, ignoring the price of the package.
+     *
      * @param $country_code
      * @param $package_value
      * @param $package_weight
+     * @param $ignore_package_value
      *
      * @return array
      */
-    public function getRates($country_code, $package_value, $package_weight)
+    public function getRates($country_code, $package_value, $package_weight, $ignore_package_value = false)
     {
 
-        $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight)];
+        $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight, $ignore_package_value)];
 
         $results = [];
 
