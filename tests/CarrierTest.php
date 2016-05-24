@@ -69,6 +69,16 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test to ensure that the calculate method class is returning rates with
+     * the ignore insurance flag set to true.
+     */
+    public function testRoyalmailClassRealValuesAll()
+    {
+        $this->assertNotEmpty($this->carrier->getRates('GB', 20, 0.050, true));
+
+    }
+
+    /**
      * Test to compare the returned data from the Data class to expected values
      */
     public function testRoyalmailMethodRealValues()
