@@ -108,7 +108,7 @@ class Data
             )
         ];
 
-        if ($ignore_package_value == true) {
+        if ($ignore_package_value) {
             $sortedMethodToMeta = [
                 $this->getMethodToMetaAll(
                     $sortedZoneToMethods,
