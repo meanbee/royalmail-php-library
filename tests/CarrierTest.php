@@ -1,5 +1,25 @@
-<?php namespace Meanbee\Royalmail;
+<?php
+/**
+ * Meanbee Royal Mail PHP Library
+ *
+ * PHP version 5.6
+ *
+ * @category  Meanbee
+ * @package   Meanbee/royalmail-php-library
+ * @author    Meanbee Limited <hello@meanbee.com>
+ * @copyright 2016 Meanbee Limited (http://www.meanbee.com)
+ * @license   OSL v. 3.0
+ * @link      http://github.com/meanbee/royalmail-php-library
+ */
 
+namespace Meanbee\Royalmail;
+
+/**
+ * Class CarrierTest
+ * Test class to run phpunit tests on the library.
+ *
+ * @package Meanbee\Royalmail
+ */
 class CarrierTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -118,7 +138,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
                 gettype($arrayContents['shippingMethodNameClean']), "shippingMethodNameClean array value not equal to correct type.");
             $this->assertEquals(gettype($this->testDataClassArray['size']), gettype($arrayContents['size']),
                 "size array value not equal to correct type.");
-
         }
     }
 
@@ -206,7 +225,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
                         sprintf("Clean names %s and %s were not equal", $data[self::METHOD_CLEAN_NAME_ROW_META_CSV],
                             $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV]));
                 }
-
             }
             $this->assertTrue($methodNotExist,
                 sprintf("%s was not found in CleanNameToMethod csv$.", $data[self::METHOD_NAME_ROW_META_CSV]));
@@ -245,7 +263,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
                     }
                 }
             }
-
         }
     }
 

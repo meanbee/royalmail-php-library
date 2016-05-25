@@ -1,5 +1,26 @@
-<?php namespace Meanbee\Royalmail;
+<?php
+/**
+ * Meanbee Royal Mail PHP Library
+ *
+ * PHP version 5.6
+ *
+ * @category  Meanbee
+ * @package   Meanbee/royalmail-php-library
+ * @author    Meanbee Limited <hello@meanbee.com>
+ * @copyright 2016 Meanbee Limited (http://www.meanbee.com)
+ * @license   OSL v. 3.0
+ * @link      http://github.com/meanbee/royalmail-php-library
+ */
 
+namespace Meanbee\Royalmail;
+
+/**
+ * Class Method
+ * Object class to represent the method object and allow for
+ * creation of method objects by the other classes.
+ *
+ * @package Meanbee\Royalmail
+ */
 class Method
 {
     /**
