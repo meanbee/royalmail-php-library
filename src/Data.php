@@ -184,7 +184,7 @@ class Data
     private function _getCountryCodeData($country_code, $mappingCountryToZone)
     {
         // Get All array items that match the country code
-        $countryCodeData = [];
+        $countryCodeData = array();
         foreach ($mappingCountryToZone as $item) {
             if (isset($item[self::COUNTRY_CODE])
                 && $item[self::COUNTRY_CODE] == $country_code
@@ -219,7 +219,7 @@ class Data
         $sortedCountryCodeMethods,
         $mappingZoneToMethod
     ) {
-        $mappingZoneData = [];
+        $mappingZoneData = array();
         foreach ($sortedCountryCodeMethods as $key => $value) {
             foreach ($value as $zone) {
                 foreach ($mappingZoneToMethod as $item) {
@@ -248,6 +248,55 @@ class Data
         $mappingZoneData = array_values($mappingZoneData);
 
         return $mappingZoneData;
+    }
+
+    /**
+     * Method to return a 2d array of sorted shipping methods based on
+     * the weight of the item and the allowed shipping methods. Returns
+     * a 2d array to be converting into objects by the RoyalMailMethod
+     * class. Also adds the pretty text from the meta table to the
+     * correct shipping method, to allow for less text in the delivery
+     * to price csv.
+     *
+     * @param int   $package_weight         - The weight of the package
+     * @param array $sortedMethodToMeta     - Sorted methods to meta
+     * @param array $mappingDeliveryToPrice - Sorted delivery to price
+     *
+     * @return array
+     */
+    private function _getMethodToPrice(
+        $package_weight,
+        $sortedMethodToMeta,
+        $mappingDeliveryToPrice
+    ) {
+        $mappingDeliveryToPriceData = array();
+        foreach ($mappingDeliveryToPrice as $item) {
+            if (isset($item[self::SHIPPING_METHOD])
+                && isset($sortedMethodToMeta[$item[self::SHIPPING_METHOD]])
+                && $package_weight >= $item[self::METHOD_MIN_WEIGHT]
+                && $package_weight <= $item[self::METHOD_MAX_WEIGHT]
+            ) {
+                $data = $sortedMethodToMeta[$item[self::SHIPPING_METHOD]];
+                $resultArray = [
+                    'shippingMethodName' => $item[self::SHIPPING_METHOD],
+                    'minimumWeight' => (double) $item[self::METHOD_MIN_WEIGHT],
+                    'maximumWeight' => (double) $item[self::METHOD_MAX_WEIGHT],
+                    'methodPrice' => (double) $item[self::METHOD_PRICE],
+                    'insuranceValue' => (int) $item[self::METHOD_INSURANCE_VALUE],
+                    'shippingMethodNameClean' => $data[self::METHOD_NAME_CLEAN]
+                ];
+
+                if (isset($item[self::METHOD_SIZE])) {
+                    $resultArray['size'] = $item[self::METHOD_SIZE];
+                }
+
+                $mappingDeliveryToPriceData[] = $resultArray;
+            }
+        }
+
+        $mappingDeliveryToPriceData = array_values($mappingDeliveryToPriceData);
+
+        return $mappingDeliveryToPriceData;
     }
 
     /**
@@ -284,53 +333,6 @@ class Data
         }
 
         return $mappingZoneMethodData;
-    }
-
-    /**
-     * Method to return a 2d array of sorted shipping methods based on
-     * the weight of the item and the allowed shipping methods. Returns
-     * a 2d array to be converting into objects by the RoyalMailMethod
-     * class. Also adds the pretty text from the meta table to the
-     * correct shipping method, to allow for less text in the delivery
-     * to price csv.
-     *
-     * @param int   $package_weight         - The weight of the package
-     * @param array $sortedMethodToMeta     - Sorted methods to meta
-     * @param array $mappingDeliveryToPrice - Sorted delivery to price
-     *
-     * @return array
-     */
-    private function _getMethodToPrice(
-        $package_weight,
-        $sortedMethodToMeta,
-        $mappingDeliveryToPrice
-    ) {
-        $mappingDeliveryToPriceData = [];
-        foreach ($mappingDeliveryToPrice as $item) {
-            if (isset($item[self::SHIPPING_METHOD])
-                && isset($sortedMethodToMeta[$item[self::SHIPPING_METHOD]])
-                && $package_weight >= $item[self::METHOD_MIN_WEIGHT]
-                && $package_weight <= $item[self::METHOD_MAX_WEIGHT]
-            ) {
-                $data = $sortedMethodToMeta[$item[self::SHIPPING_METHOD]];
-                $resultArray = [
-                    'shippingMethodName' => $item[self::SHIPPING_METHOD],
-                    'minimumWeight' => (double) $item[self::METHOD_MIN_WEIGHT],
-                    'maximumWeight' => (double) $item[self::METHOD_MAX_WEIGHT],
-                    'methodPrice' => (double) $item[self::METHOD_PRICE],
-                    'insuranceValue' => (int) $item[self::METHOD_INSURANCE_VALUE],
-                    'shippingMethodNameClean' => $data[self::METHOD_NAME_CLEAN]
-                ];
-
-                if (isset($item[self::METHOD_SIZE])) {
-                    $resultArray['size'] = $item[self::METHOD_SIZE];
-                }
-
-                $mappingDeliveryToPriceData[] = $resultArray;
-            }
-        }
-
-        return $mappingDeliveryToPriceData;
     }
 
     /**

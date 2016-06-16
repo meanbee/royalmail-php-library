@@ -34,7 +34,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     const METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV = 1;
     const METHOD_CLEAN_NAME_ROW_CLEANNAMEGROUP_CSV = 1;
     const METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV = 0;
-    const METHOD_CLEAN_NAME_GROUP_CLNNAMEGRP_CSV = 0;
+    const METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV = 0;
     const INSURANCE_ROW_META_CSV = 3;
     const INSURANCE_ROW_PRICE_CSV = 4;
     const INSURANCE_ROW_CLEANNAME_CSV = 5;
@@ -497,12 +497,12 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
                 ) {
                     $this->assertEquals(
                         $data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
-                        $methodData[self::METHOD_CLEAN_NAME_GROUP_CLNNAMEGRP_CSV],
+                        $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV],
                         sprintf(
                             "Clean names %s from mappingCleanNameToMethod and
                             %s from mappingCleanNameToMethodGroup were not equal.",
                             $data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
-                            $methodData[self::METHOD_CLEAN_NAME_GROUP_CLNNAMEGRP_CSV]
+                            $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV]
                         )
                     );
                 }
