@@ -153,20 +153,16 @@ class Data
         ];
 
         if ($ignore_package_value) {
-            $sortedMethodToMeta = [
-                $this->_getMethodToMetaAll(
-                    $sortedZoneToMethods,
-                    $this->mappingMethodToMeta
-                )
-            ];
+            $sortedMethodToMeta = $this->_getMethodToMetaAll(
+                $sortedZoneToMethods,
+                $this->mappingMethodToMeta
+            );
         } else {
-            $sortedMethodToMeta = [
-                $this->_getMethodToMeta(
-                    $package_value,
-                    $sortedZoneToMethods,
-                    $this->mappingMethodToMeta
-                )
-            ];
+            $sortedMethodToMeta = $this->_getMethodToMeta(
+                $package_value,
+                $sortedZoneToMethods,
+                $this->mappingMethodToMeta
+            );
         }
 
         return $this->_getMethodToPrice(
@@ -270,7 +266,7 @@ class Data
         $sortedZoneToMethods,
         $mappingMethodToMeta
     ) {
-        $mappingZoneMethodData = [];
+        $mappingZoneMethodData = array();
         foreach ($sortedZoneToMethods as $key => $value) {
             foreach ($value as $method) {
                 foreach ($mappingMethodToMeta as $item) {
@@ -280,14 +276,12 @@ class Data
                         if ($packageValue >= $item[self::METHOD_MIN_VALUE]
                             && $packageValue <= $item[self::METHOD_MAX_VALUE]
                         ) {
-                            $mappingZoneMethodData[] = [$item];
+                            $mappingZoneMethodData[$item[0]] = $item;
                         }
                     }
                 }
             }
         }
-
-        $mappingZoneMethodData = array_values($mappingZoneMethodData);
 
         return $mappingZoneMethodData;
     }
@@ -312,36 +306,29 @@ class Data
         $mappingDeliveryToPrice
     ) {
         $mappingDeliveryToPriceData = [];
-        foreach ($sortedMethodToMeta as $method) {
-            foreach ($method as $meta) {
-                foreach ($meta as $key => $value) {
-                    foreach ($value as $methodData) {
-                        foreach ($mappingDeliveryToPrice as $item) {
-                            if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $methodData) {
-                                if ($package_weight >= $item[self::METHOD_MIN_WEIGHT] && $package_weight <= $item[self::METHOD_MAX_WEIGHT]) {
-                                    $resultArray = [
-                                        'shippingMethodName'      => $item[self::SHIPPING_METHOD],
-                                        'minimumWeight'           => (double) $item[self::METHOD_MIN_WEIGHT],
-                                        'maximumWeight'           => (double) $item[self::METHOD_MAX_WEIGHT],
-                                        'methodPrice'             => (double) $item[self::METHOD_PRICE],
-                                        'insuranceValue'          => (int) $item[self::METHOD_INSURANCE_VALUE],
-                                        'shippingMethodNameClean' => $value[self::METHOD_NAME_CLEAN]
-                                    ];
+        foreach ($mappingDeliveryToPrice as $item) {
+            if (isset($item[self::SHIPPING_METHOD])
+                && isset($sortedMethodToMeta[$item[self::SHIPPING_METHOD]])
+                && $package_weight >= $item[self::METHOD_MIN_WEIGHT]
+                && $package_weight <= $item[self::METHOD_MAX_WEIGHT]
+            ) {
+                $data = $sortedMethodToMeta[$item[self::SHIPPING_METHOD]];
+                $resultArray = [
+                    'shippingMethodName' => $item[self::SHIPPING_METHOD],
+                    'minimumWeight' => (double) $item[self::METHOD_MIN_WEIGHT],
+                    'maximumWeight' => (double) $item[self::METHOD_MAX_WEIGHT],
+                    'methodPrice' => (double) $item[self::METHOD_PRICE],
+                    'insuranceValue' => (int) $item[self::METHOD_INSURANCE_VALUE],
+                    'shippingMethodNameClean' => $data[self::METHOD_NAME_CLEAN]
+                ];
 
-                                    if (isset($item[self::METHOD_SIZE])) {
-                                        $resultArray['size'] = $item[self::METHOD_SIZE];
-                                    }
-
-                                    $mappingDeliveryToPriceData[] = $resultArray;
-                                }
-                            }
-                        }
-                    }
+                if (isset($item[self::METHOD_SIZE])) {
+                    $resultArray['size'] = $item[self::METHOD_SIZE];
                 }
+
+                $mappingDeliveryToPriceData[] = $resultArray;
             }
         }
-
-        $mappingDeliveryToPriceData = array_values($mappingDeliveryToPriceData);
 
         return $mappingDeliveryToPriceData;
     }
@@ -359,20 +346,18 @@ class Data
      */
     private function _getMethodToMetaAll($sortedZoneToMethods, $mappingMethodToMeta)
     {
-        $mappingZoneMethodData = [];
+        $mappingZoneMethodData = array();
         foreach ($sortedZoneToMethods as $key => $value) {
             foreach ($value as $method) {
                 foreach ($mappingMethodToMeta as $item) {
                     if (isset($item[self::SHIPPING_METHOD])
                         && $item[self::SHIPPING_METHOD] == $method
                     ) {
-                        $mappingZoneMethodData[] = [$item];
+                        $mappingZoneMethodData[$item[0]] = $item;
                     }
                 }
             }
         }
-
-        $mappingZoneMethodData = array_values($mappingZoneMethodData);
 
         return $mappingZoneMethodData;
     }
