@@ -184,7 +184,7 @@ class Data
     private function _getCountryCodeData($country_code, $mappingCountryToZone)
     {
         // Get All array items that match the country code
-        $countryCodeData = array();
+        $countryCodeData = [];
         foreach ($mappingCountryToZone as $item) {
             if (isset($item[self::COUNTRY_CODE])
                 && $item[self::COUNTRY_CODE] == $country_code
@@ -219,7 +219,7 @@ class Data
         $sortedCountryCodeMethods,
         $mappingZoneToMethod
     ) {
-        $mappingZoneData = array();
+        $mappingZoneData = [];
         foreach ($sortedCountryCodeMethods as $key => $value) {
             foreach ($value as $zone) {
                 foreach ($mappingZoneToMethod as $item) {
@@ -269,7 +269,7 @@ class Data
         $sortedMethodToMeta,
         $mappingDeliveryToPrice
     ) {
-        $mappingDeliveryToPriceData = array();
+        $mappingDeliveryToPriceData = [];
         foreach ($mappingDeliveryToPrice as $item) {
             if (isset($item[self::SHIPPING_METHOD])
                 && isset($sortedMethodToMeta[$item[self::SHIPPING_METHOD]])
@@ -315,7 +315,7 @@ class Data
         $sortedZoneToMethods,
         $mappingMethodToMeta
     ) {
-        $mappingZoneMethodData = array();
+        $mappingZoneMethodData = [];
         foreach ($sortedZoneToMethods as $key => $value) {
             foreach ($value as $method) {
                 foreach ($mappingMethodToMeta as $item) {
@@ -348,7 +348,7 @@ class Data
      */
     private function _getMethodToMetaAll($sortedZoneToMethods, $mappingMethodToMeta)
     {
-        $mappingZoneMethodData = array();
+        $mappingZoneMethodData = [];
         foreach ($sortedZoneToMethods as $key => $value) {
             foreach ($value as $method) {
                 foreach ($mappingMethodToMeta as $item) {
