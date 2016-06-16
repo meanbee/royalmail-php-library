@@ -20,8 +20,11 @@ namespace Meanbee\Royalmail;
  * out of them. Provides methods to interact with the csv files and return sorted
  * method rates of several formats.
  *
- * @author    Meanbee Limited <hello@meanbee.com>
- * @package   Meanbee\Royalmail
+ * @category Meanbee
+ * @package  Meanbee\Royalmail
+ * @author   Meanbee Limited <hello@meanbee.com>
+ * @license  OSL v. 3.0
+ * @link     http://github.com/meanbee/royalmail-php-library
  */
 class Data
 {
@@ -101,12 +104,14 @@ class Data
         $_csvCleanNameToMethod,
         $_csvCleanNameMethodGroup
     ) {
-        $this->mappingCountryToZone = $this->csvToArray($_csvCountryCode);
-        $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliveryMethod);
-        $this->mappingMethodToMeta = $this->csvToArray($_csvDeliveryMethodMeta);
-        $this->mappingDeliveryToPrice = $this->csvToArray($_csvDeliveryToPrice);
-        $this->mappingCleanNameToMethod = $this->csvToArray($_csvCleanNameToMethod);
-        $this->mappingCleanNameMethodGroup = $this->csvToArray($_csvCleanNameMethodGroup);
+        $this->mappingCountryToZone = $this->_csvToArray($_csvCountryCode);
+        $this->mappingZoneToMethod = $this->_csvToArray($_csvZoneToDeliveryMethod);
+        $this->mappingMethodToMeta = $this->_csvToArray($_csvDeliveryMethodMeta);
+        $this->mappingDeliveryToPrice = $this->_csvToArray($_csvDeliveryToPrice);
+        $this->mappingCleanNameToMethod = $this->_csvToArray($_csvCleanNameToMethod);
+        $this->mappingCleanNameMethodGroup = $this->_csvToArray(
+            $_csvCleanNameMethodGroup
+        );
     }
 
     /**
@@ -134,14 +139,14 @@ class Data
         $ignore_package_value = false
     ) {
         $sortedCountryCodeMethods = [
-            $this->getCountryCodeData(
+            $this->_getCountryCodeData(
                 $country_code,
                 $this->mappingCountryToZone
             )
         ];
 
         $sortedZoneToMethods = [
-            $this->getZoneToMethod(
+            $this->_getZoneToMethod(
                 $sortedCountryCodeMethods,
                 $this->mappingZoneToMethod
             )
@@ -149,14 +154,14 @@ class Data
 
         if ($ignore_package_value) {
             $sortedMethodToMeta = [
-                $this->getMethodToMetaAll(
+                $this->_getMethodToMetaAll(
                     $sortedZoneToMethods,
                     $this->mappingMethodToMeta
                 )
             ];
         } else {
             $sortedMethodToMeta = [
-                $this->getMethodToMeta(
+                $this->_getMethodToMeta(
                     $package_value,
                     $sortedZoneToMethods,
                     $this->mappingMethodToMeta
@@ -164,11 +169,10 @@ class Data
             ];
         }
 
-        return $this->getMethodToPrice(
+        return $this->_getMethodToPrice(
             $package_weight,
             $sortedMethodToMeta,
             $this->mappingDeliveryToPrice
-
         );
     }
 
@@ -181,13 +185,12 @@ class Data
      *
      * @return array
      */
-    private function getCountryCodeData($country_code, $mappingCountryToZone)
+    private function _getCountryCodeData($country_code, $mappingCountryToZone)
     {
         // Get All array items that match the country code
         $countryCodeData = [];
         foreach ($mappingCountryToZone as $item) {
-            if (isset(
-                    $item[self::COUNTRY_CODE])
+            if (isset($item[self::COUNTRY_CODE])
                 && $item[self::COUNTRY_CODE] == $country_code
             ) {
                 foreach ($item as $keys) {
@@ -202,7 +205,6 @@ class Data
                 unset($countryCodeData[$key]);
             }
         }
-
         $countryCodeData = array_values($countryCodeData);
 
         return $countryCodeData;
@@ -217,8 +219,10 @@ class Data
      *
      * @return array
      */
-    private function getZoneToMethod($sortedCountryCodeMethods, $mappingZoneToMethod)
-    {
+    private function _getZoneToMethod(
+        $sortedCountryCodeMethods,
+        $mappingZoneToMethod
+    ) {
         $mappingZoneData = [];
         foreach ($sortedCountryCodeMethods as $key => $value) {
             foreach ($value as $zone) {
@@ -261,7 +265,7 @@ class Data
      *
      * @return array
      */
-    private function getMethodToMeta(
+    private function _getMethodToMeta(
         $packageValue,
         $sortedZoneToMethods,
         $mappingMethodToMeta
@@ -296,13 +300,13 @@ class Data
      * correct shipping method, to allow for less text in the delivery
      * to price csv.
      *
-     * @param $package_weight
-     * @param $sortedMethodToMeta
-     * @param $mappingDeliveryToPrice
+     * @param int   $package_weight         - The weight of the package
+     * @param array $sortedMethodToMeta     - Sorted methods to meta
+     * @param array $mappingDeliveryToPrice - Sorted delivery to price
      *
      * @return array
      */
-    private function getMethodToPrice(
+    private function _getMethodToPrice(
         $package_weight,
         $sortedMethodToMeta,
         $mappingDeliveryToPrice
@@ -348,12 +352,12 @@ class Data
      * of the item. Returns all possible available methods
      * that are available.
      *
-     * @param $sortedZoneToMethods
-     * @param $mappingMethodToMeta
+     * @param array $sortedZoneToMethods - Sorted array of zone to methods
+     * @param array $mappingMethodToMeta - Sorted array of methods to the meta
      *
      * @return array
      */
-    private function getMethodToMetaAll($sortedZoneToMethods, $mappingMethodToMeta)
+    private function _getMethodToMetaAll($sortedZoneToMethods, $mappingMethodToMeta)
     {
         $mappingZoneMethodData = [];
         foreach ($sortedZoneToMethods as $key => $value) {
@@ -382,12 +386,14 @@ class Data
      * @return array
      * @throws \Exception
      */
-    private function csvToArray($filename = '', $delimiter = ',')
+    private function _csvToArray($filename = '', $delimiter = ',')
     {
         if (!file_exists($filename) || !is_readable($filename)) {
-            throw new \Exception("Unable to load the Royal Mail price data csv for
-            '$filename'. Ensure that the data folder contains all the necessary
-             csvs.");
+            throw new \Exception(
+                "Unable to load the Royal Mail price data csv for
+                '$filename'. Ensure that the data folder contains all the necessary
+                 csvs."
+            );
         }
 
         $header = null;
