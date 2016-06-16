@@ -1,49 +1,74 @@
-<?php namespace Meanbee\Royalmail;
+<?php
+/**
+ * Meanbee Royal Mail PHP Library
+ *
+ * PHP version 5.6
+ *
+ * @category  Meanbee
+ * @package   Meanbee/royalmail-php-library
+ * @author    Meanbee Limited <hello@meanbee.com>
+ * @copyright 2016 Meanbee Limited (http://www.meanbee.com)
+ * @license   OSL v. 3.0
+ * @link      http://github.com/meanbee/royalmail-php-library
+ */
 
+namespace Meanbee\Royalmail;
+
+/**
+ * Class Carrier
+ * Provides methods to get rates from the csv files, interacts with the data class
+ * to return arrays of methods.
+ *
+ * @category Meanbee
+ * @package  Meanbee\Royalmail
+ * @author   Meanbee Limited <hello@meanbee.com>
+ * @license  OSL v. 3.0
+ * @link     http://github.com/meanbee/royalmail-php-library
+ */
 class Carrier implements CarrierInterface
 {
 
     /**
      * CSV file location for CountryCodes
+     *
      * @var string
      */
-    protected $_csvCountryCode;
+    protected $csvCountryCodeDef;
 
     /**
      * CSV file location for zone to methods
      *
      * @var string
      */
-    protected $_csvZoneToDeliveryMethod;
+    protected $csvZoneToDeliveryMethodDef;
 
     /**
      * CSV file location for method meta info
      *
      * @var string
      */
-    protected $_csvDeliveryMethodMeta;
+    protected $csvDeliveryMethodMetaDef;
 
     /**
      * CSV file location for method to price
      *
      * @var string
      */
-    protected $_csvDeliveryToPrice;
+    protected $csvDeliveryToPriceDef;
 
     /**
      * CSV file location for method codes to user-friendly label.
      *
      * @var string
      */
-    protected $_csvCleanNameToMethod;
+    protected $csvCleanNameToMethodDef;
 
     /**
      * CSV file location for mapping of method to method group
      *
      * @var string
      */
-    protected $_csvCleanNameMethodGroup;
-
+    protected $csvCleanNameMethodGroupDef;
 
     /**
      * Data resource class
@@ -55,39 +80,61 @@ class Carrier implements CarrierInterface
     /**
      * Carrier constructor.
      *
-     * @param string|null $csvCountryCode
-     * @param string|null $csvZoneToDeliveryMethod
-     * @param string|null $csvDeliveryMethodMeta
-     * @param string|null $csvDeliveryToPrice
-     * @param string|null $csvCleanNameToMethod
-     * @param string|null $csvCleanNameMethodGroup
+     * @param string|null $csvCountryCode          - csv for Country Code
+     * @param string|null $csvZoneToDeliveryMethod - csv for ZoneToDeliveyMethod
+     * @param string|null $csvDeliveryMethodMeta   - csv for DeliveryMethodMeta
+     * @param string|null $csvDeliveryToPrice      - csv for DeliveryToPrice
+     * @param string|null $csvCleanNameToMethod    - csv for CleanNameToMethod
+     * @param string|null $csvCleanNameMethodGroup - csv for $csvCleanNameMethodGroup
      */
-    public function __construct($csvCountryCode = null, $csvZoneToDeliveryMethod = null, $csvDeliveryMethodMeta = null,
-                                $csvDeliveryToPrice = null, $csvCleanNameToMethod = null,
-                                $csvCleanNameMethodGroup = null)
-    {
+    public function __construct(
+        $csvCountryCode = null,
+        $csvZoneToDeliveryMethod = null,
+        $csvDeliveryMethodMeta = null,
+        $csvDeliveryToPrice = null,
+        $csvCleanNameToMethod = null,
+        $csvCleanNameMethodGroup = null
+    ) {
         $dir = dirname(realpath(__FILE__)) . '/';
 
         // Set the default csv values
-        $this->_csvCountryCode = isset($csvCountryCode) ? $csvCountryCode : $dir . '../data/1_countryToZone.csv';
-        $this->_csvZoneToDeliveryMethod = isset($csvZoneToDeliveryMethod) ? $csvZoneToDeliveryMethod :
-            $dir . '../data/2_zoneToDeliveryMethod.csv';
-        $this->_csvDeliveryMethodMeta = isset($csvDeliveryMethodMeta) ? $csvDeliveryMethodMeta :
-            $dir . '../data/3_deliveryMethodMeta.csv';
-        $this->_csvDeliveryToPrice = isset($csvDeliveryToPrice) ? $csvDeliveryToPrice :
-            $dir . '../data/4_deliveryToPrice.csv';
-        $this->_csvCleanNameToMethod = isset($csvCleanNameToMethod) ? $csvCleanNameToMethod :
-            $dir . '../data/5_cleanNameToMethod.csv';
-        $this->_csvCleanNameMethodGroup = isset($csvCleanNameMethodGroup) ? $csvCleanNameMethodGroup :
-            $dir . '../data/6_cleanNameMethodGroup.csv';
+        $this->csvCountryCodeDef = "$dir../data/1_countryToZone.csv";
+        if ($csvCountryCode) {
+            $this->csvCountryCodeDef = $csvCountryCode;
+        }
+
+        $this->csvZoneToDeliveryMethodDef = "$dir../data/2_zoneToDeliveryMethod.csv";
+        if ($csvZoneToDeliveryMethod) {
+            $this->csvZoneToDeliveryMethodDef = $csvZoneToDeliveryMethod;
+        }
+
+        $this->csvDeliveryMethodMetaDef = "$dir../data/3_deliveryMethodMeta.csv";
+        if ($csvDeliveryMethodMeta) {
+            $this->csvDeliveryMethodMetaDef = $csvDeliveryMethodMeta;
+        }
+
+        $this->csvDeliveryToPriceDef = "$dir../data/4_deliveryToPrice.csv";
+        if ($csvDeliveryToPrice) {
+            $this->csvDeliveryToPriceDef = $csvDeliveryToPrice;
+        }
+
+        $this->csvCleanNameToMethodDef = "$dir../data/5_cleanNameToMethod.csv";
+        if ($csvCleanNameToMethod) {
+            $this->csvCleanNameToMethodDef = $csvCleanNameToMethod;
+        }
+
+        $this->csvCleanNameMethodGroupDef = "$dir../data/6_cleanNameMethodGroup.csv";
+        if ($csvCleanNameMethodGroup) {
+            $this->csvCleanNameMethodGroupDef = $csvCleanNameMethodGroup;
+        }
 
         $this->data = isset($data) ? $data : new Data(
-            $this->_csvCountryCode,
-            $this->_csvZoneToDeliveryMethod,
-            $this->_csvDeliveryMethodMeta,
-            $this->_csvDeliveryToPrice,
-            $this->_csvCleanNameToMethod,
-            $this->_csvCleanNameMethodGroup
+            $this->csvCountryCodeDef,
+            $this->csvZoneToDeliveryMethodDef,
+            $this->csvDeliveryMethodMetaDef,
+            $this->csvDeliveryToPriceDef,
+            $this->csvCleanNameToMethodDef,
+            $this->csvCleanNameMethodGroupDef
         );
     }
 
@@ -104,17 +151,28 @@ class Carrier implements CarrierInterface
      * wants to get all available methods for the country code
      * and weight, ignoring the price of the package.
      *
-     * @param $country_code
-     * @param $package_value
-     * @param $package_weight
-     * @param $ignore_package_value
+     * @param string $country_code         - The country code being shipped to
+     * @param int    $package_value        - The total package value
+     * @param int    $package_weight       - The total package weight
+     * @param bool   $ignore_package_value - Flag to allow ignoring the
+     *                                       package weight
      *
-     * @return array
+     * @return array                       - Array of all methods returned
      */
-    public function getRates($country_code, $package_value, $package_weight, $ignore_package_value = false)
-    {
-
-        $sortedDeliveryMethods = [$this->data->calculateMethods($country_code, $package_value, $package_weight, $ignore_package_value)];
+    public function getRates(
+        $country_code,
+        $package_value,
+        $package_weight,
+        $ignore_package_value = false
+    ) {
+        $sortedDeliveryMethods = [
+            $this->data->calculateMethods(
+                $country_code,
+                $package_value,
+                $package_weight,
+                $ignore_package_value
+            )
+        ];
 
         $results = [];
 
@@ -155,60 +213,60 @@ class Carrier implements CarrierInterface
     /**
      * CSV file location for CountryCodes
      *
-     * @return string
+     * @return string - default csv
      */
     public function getCsvCountryCode()
     {
-        return $this->_csvCountryCode;
+        return $this->csvCountryCodeDef;
     }
 
     /**
      * CSV file location for zone to methods
      *
-     * @return string
+     * @return string - default csv
      */
     public function getCsvZoneToDeliveryMethod()
     {
-        return $this->_csvZoneToDeliveryMethod;
+        return $this->csvZoneToDeliveryMethodDef;
     }
 
     /**
      * CSV file location for method meta info
      *
-     * @return string
+     * @return string - default csv
      */
     public function getCsvDeliveryMethodMeta()
     {
-        return $this->_csvDeliveryMethodMeta;
+        return $this->csvDeliveryMethodMetaDef;
     }
 
     /**
      * CSV file location for method to price
      *
-     * @return string
+     * @return string - default csv
      */
     public function getCsvDeliveryToPrice()
     {
-        return $this->_csvDeliveryToPrice;
+        return $this->csvDeliveryToPriceDef;
     }
 
     /**
      * CSV file location for method codes to user-friendly label.
      *
-     * @return string
+     * @return string - default csv
      */
     public function getCsvCleanNameToMethod()
     {
-        return $this->_csvCleanNameToMethod;
+        return $this->csvCleanNameToMethodDef;
     }
 
     /**
      * CSV file location for mapping of method to method group
      *
-     * @return string
+     * @return string - default csv
      */
     public function getCsvCleanNameMethodGroup()
     {
-        return $this->_csvCleanNameMethodGroup;
+        return $this->csvCleanNameMethodGroupDef;
     }
 }

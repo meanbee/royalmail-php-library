@@ -1,5 +1,31 @@
-<?php namespace Meanbee\Royalmail;
+<?php
+/**
+ * Meanbee Royal Mail PHP Library
+ *
+ * PHP version 5.6
+ *
+ * @category  Meanbee
+ * @package   Meanbee/royalmail-php-library
+ * @author    Meanbee Limited <hello@meanbee.com>
+ * @copyright 2016 Meanbee Limited (http://www.meanbee.com)
+ * @license   OSL v. 3.0
+ * @link      http://github.com/meanbee/royalmail-php-library
+ */
 
+namespace Meanbee\Royalmail;
+
+/**
+ * Class Data
+ * Data layer class. Interacts with the csv files and creates sorted mapped arrays
+ * out of them. Provides methods to interact with the csv files and return sorted
+ * method rates of several formats.
+ *
+ * @category Meanbee
+ * @package  Meanbee\Royalmail
+ * @author   Meanbee Limited <hello@meanbee.com>
+ * @license  OSL v. 3.0
+ * @link     http://github.com/meanbee/royalmail-php-library
+ */
 class Data
 {
 
@@ -24,7 +50,8 @@ class Data
     protected $mappingCleanNameToMethod = [];
 
     /**
-     * Maps the method group name to the clean name, to allow for printing just the clean names to the user
+     * Maps the method group name to the clean name, to allow for printing
+     * just the clean names to the user
      *
      * @var array
      */
@@ -45,7 +72,8 @@ class Data
     protected $mappingZoneToMethod = [];
 
     /**
-     * Map methods to meta information. This includes the insurance amount, and the corresponding price levels
+     * Map methods to meta information. This includes the insurance
+     * amount, and the corresponding price levels
      *
      * @var array
      */
@@ -58,6 +86,16 @@ class Data
      */
     protected $mappingDeliveryToPrice = [];
 
+    /**
+     * Data constructor.
+     *
+     * @param string $_csvCountryCode          - country code csv path
+     * @param string $_csvZoneToDeliveryMethod - zone to method csv path
+     * @param string $_csvDeliveryMethodMeta   - delivery method meta csv path
+     * @param string $_csvDeliveryToPrice      - delivery to price csv path
+     * @param string $_csvCleanNameToMethod    - clean name to method csv path
+     * @param string $_csvCleanNameMethodGroup - clean name method group csv path
+     */
     public function __construct(
         $_csvCountryCode,
         $_csvZoneToDeliveryMethod,
@@ -66,12 +104,14 @@ class Data
         $_csvCleanNameToMethod,
         $_csvCleanNameMethodGroup
     ) {
-        $this->mappingCountryToZone = $this->csvToArray($_csvCountryCode);
-        $this->mappingZoneToMethod = $this->csvToArray($_csvZoneToDeliveryMethod);
-        $this->mappingMethodToMeta = $this->csvToArray($_csvDeliveryMethodMeta);
-        $this->mappingDeliveryToPrice = $this->csvToArray($_csvDeliveryToPrice);
-        $this->mappingCleanNameToMethod = $this->csvToArray($_csvCleanNameToMethod);
-        $this->mappingCleanNameMethodGroup = $this->csvToArray($_csvCleanNameMethodGroup);
+        $this->mappingCountryToZone = $this->_csvToArray($_csvCountryCode);
+        $this->mappingZoneToMethod = $this->_csvToArray($_csvZoneToDeliveryMethod);
+        $this->mappingMethodToMeta = $this->_csvToArray($_csvDeliveryMethodMeta);
+        $this->mappingDeliveryToPrice = $this->_csvToArray($_csvDeliveryToPrice);
+        $this->mappingCleanNameToMethod = $this->_csvToArray($_csvCleanNameToMethod);
+        $this->mappingCleanNameMethodGroup = $this->_csvToArray(
+            $_csvCleanNameMethodGroup
+        );
     }
 
     /**
@@ -85,70 +125,70 @@ class Data
      * value of the packages to be ignored in the calculation
      * at the users discretion.
      *
-     * @param $country_code
-     * @param $package_value
-     * @param $package_weight
-     * @param $ignore_package_value
+     * @param string $country_code         - Country code being shipped to
+     * @param int    $package_value        - Package value
+     * @param int    $package_weight       - Package weight
+     * @param bool   $ignore_package_value - ignore weight bool
      *
      * @return array
      */
-    public function calculateMethods($country_code, $package_value, $package_weight, $ignore_package_value = false)
-    {
+    public function calculateMethods(
+        $country_code,
+        $package_value,
+        $package_weight,
+        $ignore_package_value = false
+    ) {
         $sortedCountryCodeMethods = [
-            $this->getCountryCodeData(
+            $this->_getCountryCodeData(
                 $country_code,
                 $this->mappingCountryToZone
             )
         ];
 
         $sortedZoneToMethods = [
-            $this->getZoneToMethod(
+            $this->_getZoneToMethod(
                 $sortedCountryCodeMethods,
                 $this->mappingZoneToMethod
             )
         ];
 
         if ($ignore_package_value) {
-            $sortedMethodToMeta = [
-                $this->getMethodToMetaAll(
-                    $sortedZoneToMethods,
-                    $this->mappingMethodToMeta
-                )
-            ];
+            $sortedMethodToMeta = $this->_getMethodToMetaAll(
+                $sortedZoneToMethods,
+                $this->mappingMethodToMeta
+            );
         } else {
-            $sortedMethodToMeta = [
-                $this->getMethodToMeta(
-                    $package_value,
-                    $sortedZoneToMethods,
-                    $this->mappingMethodToMeta
-                )
-            ];
+            $sortedMethodToMeta = $this->_getMethodToMeta(
+                $package_value,
+                $sortedZoneToMethods,
+                $this->mappingMethodToMeta
+            );
         }
 
-        return $this->getMethodToPrice(
+        return $this->_getMethodToPrice(
             $package_weight,
             $sortedMethodToMeta,
             $this->mappingDeliveryToPrice
-
         );
     }
 
     /**
-     *
      * Method to return a 2d array of world zones a country
      * (by its country code) is located in.
      *
-     * @param $country_code
-     * @param $mappingCountryToZone
+     * @param string $country_code         - Country code to filter on
+     * @param array  $mappingCountryToZone - Array for mapped countries to zones
      *
      * @return array
      */
-    private function getCountryCodeData($country_code, $mappingCountryToZone)
+    private function _getCountryCodeData($country_code, $mappingCountryToZone)
     {
         // Get All array items that match the country code
         $countryCodeData = [];
         foreach ($mappingCountryToZone as $item) {
-            if (isset($item[self::COUNTRY_CODE]) && $item[self::COUNTRY_CODE] == $country_code) {
+            if (isset($item[self::COUNTRY_CODE])
+                && $item[self::COUNTRY_CODE] == $country_code
+            ) {
                 foreach ($item as $keys) {
                     $countryCodeData[] = $keys;
                 }
@@ -161,7 +201,6 @@ class Data
                 unset($countryCodeData[$key]);
             }
         }
-
         $countryCodeData = array_values($countryCodeData);
 
         return $countryCodeData;
@@ -171,22 +210,25 @@ class Data
      * Method to return a 2d array of possible delivery methods based
      * on the given world zones a country is in.
      *
-     * @param $sortedCountryCodeMethods
-     * @param $mappingZoneToMethod
+     * @param array $sortedCountryCodeMethods - Methods to filter on
+     * @param array $mappingZoneToMethod      - ZonesToMethods to filter on
      *
      * @return array
      */
-    private function getZoneToMethod($sortedCountryCodeMethods, $mappingZoneToMethod)
-    {
+    private function _getZoneToMethod(
+        $sortedCountryCodeMethods,
+        $mappingZoneToMethod
+    ) {
         $mappingZoneData = [];
         foreach ($sortedCountryCodeMethods as $key => $value) {
             foreach ($value as $zone) {
                 foreach ($mappingZoneToMethod as $item) {
-                    if (isset($item[self::WORLD_ZONE]) && $item[self::WORLD_ZONE] == $zone) {
+                    if (isset($item[self::WORLD_ZONE])
+                        && $item[self::WORLD_ZONE] == $zone
+                    ) {
                         foreach ($item as $keys) {
                             $mappingZoneData[] = $keys;
                         }
-
                     }
                 }
             }
@@ -201,44 +243,11 @@ class Data
                     }
                 }
             }
-
         }
 
         $mappingZoneData = array_values($mappingZoneData);
 
         return $mappingZoneData;
-    }
-
-    /**
-     * Method to return a 2d array of the meta data for each
-     * given allowed shipping method and the given package
-     * value.
-     *
-     * @param $packageValue
-     * @param $sortedZoneToMethods
-     * @param $mappingMethodToMeta
-     *
-     * @return array
-     */
-    private function getMethodToMeta($packageValue, $sortedZoneToMethods, $mappingMethodToMeta)
-    {
-        $mappingZoneMethodData = [];
-        foreach ($sortedZoneToMethods as $key => $value) {
-            foreach ($value as $method) {
-                foreach ($mappingMethodToMeta as $item) {
-                    if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $method) {
-                        if ($packageValue >= $item[self::METHOD_MIN_VALUE] && $packageValue <= $item[self::METHOD_MAX_VALUE]) {
-                            $mappingZoneMethodData[] = [$item];
-                        }
-
-                    }
-                }
-            }
-        }
-
-        $mappingZoneMethodData = array_values($mappingZoneMethodData);
-
-        return $mappingZoneMethodData;
     }
 
     /**
@@ -249,42 +258,39 @@ class Data
      * correct shipping method, to allow for less text in the delivery
      * to price csv.
      *
-     * @param $package_weight
-     * @param $sortedMethodToMeta
-     * @param $mappingDeliveryToPrice
+     * @param int   $package_weight         - The weight of the package
+     * @param array $sortedMethodToMeta     - Sorted methods to meta
+     * @param array $mappingDeliveryToPrice - Sorted delivery to price
      *
      * @return array
      */
-    private function getMethodToPrice($package_weight, $sortedMethodToMeta, $mappingDeliveryToPrice)
-    {
+    private function _getMethodToPrice(
+        $package_weight,
+        $sortedMethodToMeta,
+        $mappingDeliveryToPrice
+    ) {
         $mappingDeliveryToPriceData = [];
-        foreach ($sortedMethodToMeta as $method) {
-            foreach ($method as $meta) {
-                foreach ($meta as $key => $value) {
-                    foreach ($value as $methodData) {
-                        foreach ($mappingDeliveryToPrice as $item) {
-                            if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $methodData) {
-                                if ($package_weight >= $item[self::METHOD_MIN_WEIGHT] && $package_weight <= $item[self::METHOD_MAX_WEIGHT]) {
-                                    $resultArray = [
-                                        'shippingMethodName'      => $item[self::SHIPPING_METHOD],
-                                        'minimumWeight'           => (double)$item[self::METHOD_MIN_WEIGHT],
-                                        'maximumWeight'           => (double)$item[self::METHOD_MAX_WEIGHT],
-                                        'methodPrice'             => (double)$item[self::METHOD_PRICE],
-                                        'insuranceValue'          => (int)$item[self::METHOD_INSURANCE_VALUE],
-                                        'shippingMethodNameClean' => $value[self::METHOD_NAME_CLEAN]
-                                    ];
+        foreach ($mappingDeliveryToPrice as $item) {
+            if (isset($item[self::SHIPPING_METHOD])
+                && isset($sortedMethodToMeta[$item[self::SHIPPING_METHOD]])
+                && $package_weight >= $item[self::METHOD_MIN_WEIGHT]
+                && $package_weight <= $item[self::METHOD_MAX_WEIGHT]
+            ) {
+                $data = $sortedMethodToMeta[$item[self::SHIPPING_METHOD]];
+                $resultArray = [
+                    'shippingMethodName' => $item[self::SHIPPING_METHOD],
+                    'minimumWeight' => (double) $item[self::METHOD_MIN_WEIGHT],
+                    'maximumWeight' => (double) $item[self::METHOD_MAX_WEIGHT],
+                    'methodPrice' => (double) $item[self::METHOD_PRICE],
+                    'insuranceValue' => (int) $item[self::METHOD_INSURANCE_VALUE],
+                    'shippingMethodNameClean' => $data[self::METHOD_NAME_CLEAN]
+                ];
 
-                                    if (isset($item[self::METHOD_SIZE])) {
-                                        $resultArray['size'] = $item[self::METHOD_SIZE];
-                                    }
-
-                                    $mappingDeliveryToPriceData[] = $resultArray;
-
-                                }
-                            }
-                        }
-                    }
+                if (isset($item[self::METHOD_SIZE])) {
+                    $resultArray['size'] = $item[self::METHOD_SIZE];
                 }
+
+                $mappingDeliveryToPriceData[] = $resultArray;
             }
         }
 
@@ -295,29 +301,65 @@ class Data
 
     /**
      * Method to return a 2d array of the meta data for each
-     * given allowed shipping method, not based on the price
-     * of the item. Returns all possible available methods
-     * that are available.
+     * given allowed shipping method and the given package
+     * value.
      *
-     * @param $sortedZoneToMethods
-     * @param $mappingMethodToMeta
+     * @param int   $packageValue        - Package value to filter methods on
+     * @param array $sortedZoneToMethods - SortedZoneToMethods to filter with
+     * @param array $mappingMethodToMeta - MethodToMeta to filter on
      *
      * @return array
      */
-    private function getMethodToMetaAll($sortedZoneToMethods, $mappingMethodToMeta)
-    {
+    private function _getMethodToMeta(
+        $packageValue,
+        $sortedZoneToMethods,
+        $mappingMethodToMeta
+    ) {
         $mappingZoneMethodData = [];
         foreach ($sortedZoneToMethods as $key => $value) {
             foreach ($value as $method) {
                 foreach ($mappingMethodToMeta as $item) {
-                    if (isset($item[self::SHIPPING_METHOD]) && $item[self::SHIPPING_METHOD] == $method) {
-                        $mappingZoneMethodData[] = [$item];
+                    if (isset($item[self::SHIPPING_METHOD])
+                        && $item[self::SHIPPING_METHOD] == $method
+                    ) {
+                        if ($packageValue >= $item[self::METHOD_MIN_VALUE]
+                            && $packageValue <= $item[self::METHOD_MAX_VALUE]
+                        ) {
+                            $mappingZoneMethodData[$item[0]] = $item;
+                        }
                     }
                 }
             }
         }
 
-        $mappingZoneMethodData = array_values($mappingZoneMethodData);
+        return $mappingZoneMethodData;
+    }
+
+    /**
+     * Method to return a 2d array of the meta data for each
+     * given allowed shipping method, not based on the price
+     * of the item. Returns all possible available methods
+     * that are available.
+     *
+     * @param array $sortedZoneToMethods - Sorted array of zone to methods
+     * @param array $mappingMethodToMeta - Sorted array of methods to the meta
+     *
+     * @return array
+     */
+    private function _getMethodToMetaAll($sortedZoneToMethods, $mappingMethodToMeta)
+    {
+        $mappingZoneMethodData = [];
+        foreach ($sortedZoneToMethods as $key => $value) {
+            foreach ($value as $method) {
+                foreach ($mappingMethodToMeta as $item) {
+                    if (isset($item[self::SHIPPING_METHOD])
+                        && $item[self::SHIPPING_METHOD] == $method
+                    ) {
+                        $mappingZoneMethodData[$item[0]] = $item;
+                    }
+                }
+            }
+        }
 
         return $mappingZoneMethodData;
     }
@@ -325,17 +367,20 @@ class Data
     /**
      * Reads the given csv in to a 2d array
      *
-     * @param string $filename
-     * @param string $delimiter
+     * @param string $filename  - The filename of the csv
+     * @param string $delimiter - The delimiter
      *
      * @return array
      * @throws \Exception
      */
-    private function csvToArray($filename = '', $delimiter = ',')
+    private function _csvToArray($filename = '', $delimiter = ',')
     {
         if (!file_exists($filename) || !is_readable($filename)) {
-            throw new \Exception("Unable to load the Royal Mail price data csv for '$filename'.
-            Ensure that the data folder contains all the necessary csvs.");
+            throw new \Exception(
+                "Unable to load the Royal Mail price data csv for
+                '$filename'. Ensure that the data folder contains all the necessary
+                 csvs."
+            );
         }
 
         $header = null;
@@ -360,7 +405,8 @@ class Data
     }
 
     /**
-     * Maps the method group name to the clean name, to allow for printing just the clean names to the user
+     * Maps the method group name to the clean name, to allow
+     * for printing just the clean names to the user
      *
      * @return array
      */
@@ -390,7 +436,8 @@ class Data
     }
 
     /**
-     * Map methods to meta information. This includes the insurance amount, and the corresponding price levels
+     * Map methods to meta information. This includes the insurance
+     * amount, and the corresponding price levels
      *
      * @return array
      */
