@@ -19,7 +19,11 @@ namespace Meanbee\Royalmail;
  * Allows for a generic interface of carrier to account for any future carriers
  * to be added.
  *
- * @package Meanbee\Royalmail
+ * @category Meanbee
+ * @package  Meanbee\Royalmail
+ * @author   Meanbee Limited <hello@meanbee.com>
+ * @license  OSL v. 3.0
+ * @link     http://github.com/meanbee/royalmail-php-library
  */
 interface CarrierInterface
 {
