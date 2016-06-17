@@ -9,9 +9,7 @@
       "shipping method",
       "php library"
   ],
-  {
-      "license": "OSL-3.0"
-  },
+  "license": "OSL-3.0",
   "authors": [
     {
       "name": "Meanbee Ltd",
