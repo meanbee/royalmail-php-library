@@ -44,4 +44,11 @@ interface CarrierInterface
         $package_weight,
         $ignore_package_value = false
     );
+
+    /**
+     * Get full list of available Methods
+     *
+     * @return array
+     */
+    public function getAllMethods();
 }
