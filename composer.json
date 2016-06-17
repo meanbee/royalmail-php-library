@@ -4,12 +4,14 @@
   "description": "PHP library for Royal Mail shipping shipping methods",
   "homepage": "https://github.com/meanbee/royalmail-php-library",
   "keywords": [
-    "royalmail",
-    "meanbee",
-    "shipping method",
-    "php library"
+      "royalmail",
+      "meanbee",
+      "shipping method",
+      "php library"
   ],
-
+  {
+      "license": "OSL-3.0"
+  },
   "authors": [
     {
       "name": "Meanbee Ltd",
