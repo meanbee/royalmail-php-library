@@ -255,12 +255,13 @@ class Data
             ) {
                 $data = $sortedMethodToMeta[$item[self::SHIPPING_METHOD]];
                 $resultArray = [
-                    'shippingMethodName' => $item[self::SHIPPING_METHOD],
+                    'id' => $item[self::SHIPPING_METHOD],
+                    'code' => $data[self::METHOD_META_GROUP_CODE],
+                    'name' => $data[self::METHOD_NAME_CLEAN],
                     'minimumWeight' => (double) $item[self::METHOD_MIN_WEIGHT],
                     'maximumWeight' => (double) $item[self::METHOD_MAX_WEIGHT],
-                    'methodPrice' => (double) $item[self::METHOD_PRICE],
+                    'price' => (double) $item[self::METHOD_PRICE],
                     'insuranceValue' => (int) $item[self::METHOD_INSURANCE_VALUE],
-                    'shippingMethodNameClean' => $data[self::METHOD_NAME_CLEAN]
                 ];
 
                 if (isset($item[self::METHOD_SIZE])) {

@@ -160,10 +160,11 @@ class Carrier implements CarrierInterface
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
                 $method = new Method(
-                    $item['shippingMethodName'],
-                    $item['shippingMethodNameClean'],
+                    $item['id'],
+                    $item['code'],
+                    $item['name'],
                     $country_code,
-                    $item['methodPrice'],
+                    $item['price'],
                     $item['insuranceValue'],
                     $item['minimumWeight'],
                     $item['maximumWeight'],
@@ -185,7 +186,8 @@ class Carrier implements CarrierInterface
     {
         $methods = [];
         foreach ($this->data->getMappingMethodToMeta() as $item) {
-            $methods[$item[Data::METHOD_META_GROUP_CODE]] = $item[Data::METHOD_NAME_CLEAN];
+            $methods[$item[Data::METHOD_META_GROUP_CODE]] =
+                $item[Data::METHOD_NAME_CLEAN];
         }
 
         return $methods;
