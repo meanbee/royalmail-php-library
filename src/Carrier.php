@@ -57,13 +57,6 @@ class Carrier implements CarrierInterface
     protected $csvDeliveryToPriceDef;
 
     /**
-     * CSV file location for method codes to user-friendly label.
-     *
-     * @var string
-     */
-    protected $csvCleanNameToMethodDef;
-
-    /**
      * CSV file location for mapping of method to method group
      *
      * @var string
@@ -117,12 +110,7 @@ class Carrier implements CarrierInterface
         if ($csvDeliveryToPrice) {
             $this->csvDeliveryToPriceDef = $csvDeliveryToPrice;
         }
-
-        $this->csvCleanNameToMethodDef = "$dir../data/5_cleanNameToMethod.csv";
-        if ($csvCleanNameToMethod) {
-            $this->csvCleanNameToMethodDef = $csvCleanNameToMethod;
-        }
-
+        
         $this->csvCleanNameMethodGroupDef = "$dir../data/6_cleanNameMethodGroup.csv";
         if ($csvCleanNameMethodGroup) {
             $this->csvCleanNameMethodGroupDef = $csvCleanNameMethodGroup;
@@ -133,7 +121,6 @@ class Carrier implements CarrierInterface
             $this->csvZoneToDeliveryMethodDef,
             $this->csvDeliveryMethodMetaDef,
             $this->csvDeliveryToPriceDef,
-            $this->csvCleanNameToMethodDef,
             $this->csvCleanNameMethodGroupDef
         );
     }
@@ -248,16 +235,6 @@ class Carrier implements CarrierInterface
     public function getCsvDeliveryToPrice()
     {
         return $this->csvDeliveryToPriceDef;
-    }
-
-    /**
-     * CSV file location for method codes to user-friendly label.
-     *
-     * @return string - default csv
-     */
-    public function getCsvCleanNameToMethod()
-    {
-        return $this->csvCleanNameToMethodDef;
     }
 
     /**

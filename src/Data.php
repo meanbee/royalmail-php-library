@@ -41,14 +41,7 @@ class Data
     const METHOD_INSURANCE_VALUE = 4;
     const METHOD_NAME_CLEAN = 4;
     const METHOD_SIZE = 5;
-
-    /**
-     * Maps the clean name csv to the method method name csv
-     *
-     * @var array
-     */
-    protected $mappingCleanNameToMethod = [];
-
+    
     /**
      * Maps the method group name to the clean name, to allow for printing
      * just the clean names to the user
@@ -93,7 +86,6 @@ class Data
      * @param string $_csvZoneToDeliveryMethod - zone to method csv path
      * @param string $_csvDeliveryMethodMeta   - delivery method meta csv path
      * @param string $_csvDeliveryToPrice      - delivery to price csv path
-     * @param string $_csvCleanNameToMethod    - clean name to method csv path
      * @param string $_csvCleanNameMethodGroup - clean name method group csv path
      */
     public function __construct(
@@ -101,14 +93,12 @@ class Data
         $_csvZoneToDeliveryMethod,
         $_csvDeliveryMethodMeta,
         $_csvDeliveryToPrice,
-        $_csvCleanNameToMethod,
         $_csvCleanNameMethodGroup
     ) {
         $this->mappingCountryToZone = $this->_csvToArray($_csvCountryCode);
         $this->mappingZoneToMethod = $this->_csvToArray($_csvZoneToDeliveryMethod);
         $this->mappingMethodToMeta = $this->_csvToArray($_csvDeliveryMethodMeta);
         $this->mappingDeliveryToPrice = $this->_csvToArray($_csvDeliveryToPrice);
-        $this->mappingCleanNameToMethod = $this->_csvToArray($_csvCleanNameToMethod);
         $this->mappingCleanNameMethodGroup = $this->_csvToArray(
             $_csvCleanNameMethodGroup
         );
@@ -392,16 +382,6 @@ class Data
             fclose($handle);
         }
         return $data;
-    }
-
-    /**
-     * Maps the method group name to the clean name and the related method
-     *
-     * @return array
-     */
-    public function getMappingCleanNameToMethod()
-    {
-        return $this->mappingCleanNameToMethod;
     }
 
     /**
