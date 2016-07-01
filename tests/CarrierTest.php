@@ -440,7 +440,9 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         foreach ($methods as $code => $name) {
             $this->assertInternalType('string', $code);
             $this->assertFalse(strpos($code, ' '));
+
             $this->assertInternalType('string', $name);
+            $this->assertTrue(strpos($name, ' ') !== false);
         }
     }
 }
