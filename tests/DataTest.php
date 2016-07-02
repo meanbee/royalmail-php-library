@@ -46,7 +46,6 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     private $_dataClass;
 
-    private $_emptyArray;
     private $_testDataClassArray;
 
     /**
@@ -58,7 +57,6 @@ class DataTest extends \PHPUnit_Framework_TestCase
     {
         $this->_dataClass = new Data();
 
-        $this->_emptyArray = [];
         $this->_testDataClassArray = array(
             'id' => 'TEST_ID',
             'code' => 'testcode',
@@ -157,38 +155,32 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailMethodFake()
     {
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 'GASD', "aSDASD", "ASDASD"
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 123123123, "asdasd", "asdadasd"
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 123123, 123123, "ASDASD"
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 123123123, 123123123, 123123123
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 'GB', "aSD!!ASD", 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 'GB', 123123123123, 0.100
             )
@@ -204,38 +196,32 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailMethodNull()
     {
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 null, 123123123123, 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 null, null, 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 'GB', null, 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 'GB', null, null
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 'GB', 123123123123, null
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_dataClass->calculateMethods(
                 null, null, null
             )
@@ -250,23 +236,16 @@ class DataTest extends \PHPUnit_Framework_TestCase
      */
     public function testInsuranceValue()
     {
-        foreach ($this->_dataClass->getMappingMethodToMeta() as $array => $data) {
-            foreach ($this->_dataClass->getMappingDeliveryToPrice()
-                     as $method => $methodData) {
-                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]
-                ) {
-                    if ($methodData[self::INSURANCE_ROW_PRICE_CSV] != "") {
-                        $this->assertEquals(
-                            $data[self::INSURANCE_ROW_META_CSV],
-                            $methodData[self::INSURANCE_ROW_PRICE_CSV],
-                            sprintf(
-                                "Insurance values %s from mappingMethodToMeta and
-                                %s from mappingDeliveryToPrice were not equal.",
-                                $data[self::INSURANCE_ROW_META_CSV],
-                                $methodData[self::INSURANCE_ROW_PRICE_CSV]
-                            )
-                        );
-                    }
+        $deliveryToPrice = $this->_dataClass->getMappingDeliveryToPrice();
+        foreach ($this->_dataClass->getMappingMethodToMeta() as $id => $methodMeta) {
+            $methodRates = $deliveryToPrice[$id];
+
+            foreach ($methodRates as $methodRate) {
+                if ($methodRate[self::INSURANCE_ROW_PRICE_CSV] != "") {
+                    $this->assertEquals(
+                        $methodMeta[0][self::INSURANCE_ROW_META_CSV],
+                        $methodRate[self::INSURANCE_ROW_PRICE_CSV]
+                    );
                 }
             }
         }

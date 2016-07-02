@@ -47,16 +47,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     private $_carrier;
 
     /**
-     * Variable for data class
-     *
-     * @var Data $_dataClass
-     */
-    private $_dataClass;
-
-    private $_emptyArray;
-    private $_testDataClassArray;
-
-    /**
      * Setup the necessary classes and data
      *
      * @return null
@@ -69,19 +59,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
          * @var Carrier
          */
         $this->_carrier = new Carrier();
-        $this->_dataClass = new Data();
-
-        $this->_emptyArray = [];
-        $this->_testDataClassArray = array(
-            'id'                      => 'TEST_ID',
-            'code'                    => 'testcode',
-            'minimumWeight'           => 1.00,
-            'maximumWeight'           => 5.00,
-            'price'                   => 0.99,
-            'insuranceValue'          => 10,
-            'name'                    => 'Test',
-            'size'                    => 'Small',
-        );
     }
 
     /**
@@ -92,7 +69,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $this->_carrier = null;
-        $this->_dataClass = null;
     }
 
     /**
@@ -116,9 +92,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertCount(
             37,
-            $this->_carrier->getRates('GB', 20, 0.050, true),
-            "Array size from getRates did not match on
-            the expected size of 37 methods returned."
+            $this->_carrier->getRates('GB', 20, 0.050, true)
         );
     }
 
@@ -146,9 +120,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertCount(
             30,
-            $this->_carrier->getRates('GB', 20, 0.050, false),
-            "Array size from getRates did not match on
-             the expected size of 37 methods returned."
+            $this->_carrier->getRates('GB', 20, 0.050, false)
         );
     }
 
@@ -160,42 +132,12 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailClassFake()
     {
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_carrier->getRates(
-                'GASD', "aSDASD", "ASDASD"
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_carrier->getRates(
-                123123123, "asdasd", "asdadasd"
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_carrier->getRates(
-                123123, 123123, "ASDASD"
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_carrier->getRates(
-                123123123, 123123123, 123123123
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_carrier->getRates(
-                'GB', "aSD!!ASD", 0.100
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_carrier->getRates(
-                'GB', 123123123123, 0.100
-            )
-        );
+        $this->assertEmpty($this->_carrier->getRates('GASD', "aSDASD", "ASDASD"));
+        $this->assertEmpty($this->_carrier->getRates(123123, "asdasd", "asdadasd"));
+        $this->assertEmpty($this->_carrier->getRates(123123, 123123, "ASDASD"));
+        $this->assertEmpty($this->_carrier->getRates(12312312, 12312312, 12312312));
+        $this->assertEmpty($this->_carrier->getRates('GB', "aSD!!ASD", 0.100));
+        $this->assertEmpty($this->_carrier->getRates('GB', 123123123123, 0.100));
     }
 
     /**
@@ -206,38 +148,32 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
      */
     public function testRoyalmailClassNull()
     {
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_carrier->getRates(
                 null, 123123123123, 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_carrier->getRates(
                 null, null, 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_carrier->getRates(
                 'GB', null, 0.100
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_carrier->getRates(
                 'GB', null, null
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_carrier->getRates(
                 'GB', 123123123123, null
             )
         );
-        $this->assertEquals(
-            $this->_emptyArray,
+        $this->assertEmpty(
             $this->_carrier->getRates(
                 null, null, null
             )

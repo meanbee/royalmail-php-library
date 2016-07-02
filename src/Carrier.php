@@ -49,7 +49,6 @@ class Carrier implements CarrierInterface
         $csvDeliveryMethodMeta = null,
         $csvDeliveryToPrice = null
     ) {
-
         $this->data = new Data(
             $csvCountryCode,
             $csvZoneToDeliveryMethod,
@@ -125,60 +124,9 @@ class Carrier implements CarrierInterface
     {
         $methods = [];
         foreach ($this->data->getMappingMethodToMeta() as $item) {
-            $methods[$item[Data::METHOD_META_GROUP_CODE]]
-                = $item[Data::METHOD_NAME_CLEAN];
+            $methods[$item[0][Data::CODE_COLUMN]] = $item[0][Data::NAME_COLUMN];
         }
 
         return $methods;
-    }
-
-    /**
-     * CSV file location for CountryCodes
-     *
-     * @return string - default csv
-     */
-    public function getCsvCountryCode()
-    {
-        return $this->csvCountryCodeDef;
-    }
-
-    /**
-     * CSV file location for zone to methods
-     *
-     * @return string - default csv
-     */
-    public function getCsvZoneToDeliveryMethod()
-    {
-        return $this->csvZoneToDeliveryMethodDef;
-    }
-
-    /**
-     * CSV file location for method meta info
-     *
-     * @return string - default csv
-     */
-    public function getCsvDeliveryMethodMeta()
-    {
-        return $this->csvDeliveryMethodMetaDef;
-    }
-
-    /**
-     * CSV file location for method to price
-     *
-     * @return string - default csv
-     */
-    public function getCsvDeliveryToPrice()
-    {
-        return $this->csvDeliveryToPriceDef;
-    }
-
-    /**
-     * CSV file location for mapping of method to method group
-     *
-     * @return string - default csv
-     */
-    public function getCsvCleanNameMethodGroup()
-    {
-        return $this->csvCleanNameMethodGroupDef;
     }
 }
