@@ -137,7 +137,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     {
         $rates = $this->_carrier->getRates('GB', 20, 0.050, true);
         foreach ($rates as $rate) {
-            $this->assertInstanceOf(Method::class, $rate);
+            $this->assertInstanceOf('Meanbee\Royalmail\Method', $rate);
         }
     }
 
