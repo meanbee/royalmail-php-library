@@ -74,21 +74,41 @@ class Data
     /**
      * Data constructor.
      *
-     * @param string $_csvCountryCode          - country code csv path
-     * @param string $_csvZoneToDeliveryMethod - zone to method csv path
-     * @param string $_csvDeliveryMethodMeta   - delivery method meta csv path
-     * @param string $_csvDeliveryToPrice      - delivery to price csv path
+     * @param string $csvCountryCode          - country code csv path
+     * @param string $csvZoneToDeliveryMethod - zone to method csv path
+     * @param string $csvDeliveryMethodMeta   - delivery method meta csv path
+     * @param string $csvDeliveryToPrice      - delivery to price csv path
      */
     public function __construct(
-        $_csvCountryCode,
-        $_csvZoneToDeliveryMethod,
-        $_csvDeliveryMethodMeta,
-        $_csvDeliveryToPrice
+        $csvCountryCode = null,
+        $csvZoneToDeliveryMethod = null,
+        $csvDeliveryMethodMeta = null,
+        $csvDeliveryToPrice = null
     ) {
-        $this->mappingCountryToZone = $this->_csvToArray($_csvCountryCode);
-        $this->mappingZoneToMethod = $this->_csvToArray($_csvZoneToDeliveryMethod);
-        $this->mappingMethodToMeta = $this->_csvToArray($_csvDeliveryMethodMeta);
-        $this->mappingDeliveryToPrice = $this->_csvToArray($_csvDeliveryToPrice);
+
+        $dir = dirname(realpath(__FILE__)) . '/';
+
+        // Set the default csv values
+        if (is_null($csvCountryCode)) {
+            $csvCountryCode = "$dir../data/1_countryToZone.csv";
+        }
+
+        if (is_null($csvZoneToDeliveryMethod)) {
+            $csvZoneToDeliveryMethod = "$dir../data/2_zoneToDeliveryMethod.csv";
+        }
+
+        if (is_null($csvDeliveryMethodMeta)) {
+            $csvDeliveryMethodMeta = "$dir../data/3_deliveryMethodMeta.csv";
+        }
+
+        if (is_null($csvDeliveryToPrice)) {
+            $csvDeliveryToPrice = "$dir../data/4_deliveryToPrice.csv";
+        }
+        
+        $this->mappingCountryToZone = $this->_csvToArray($csvCountryCode);
+        $this->mappingZoneToMethod = $this->_csvToArray($csvZoneToDeliveryMethod);
+        $this->mappingMethodToMeta = $this->_csvToArray($csvDeliveryMethodMeta);
+        $this->mappingDeliveryToPrice = $this->_csvToArray($csvDeliveryToPrice);
     }
 
     /**

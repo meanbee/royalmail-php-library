@@ -29,41 +29,6 @@ class Carrier implements CarrierInterface
 {
 
     /**
-     * CSV file location for CountryCodes
-     *
-     * @var string
-     */
-    protected $csvCountryCodeDef;
-
-    /**
-     * CSV file location for zone to methods
-     *
-     * @var string
-     */
-    protected $csvZoneToDeliveryMethodDef;
-
-    /**
-     * CSV file location for method meta info
-     *
-     * @var string
-     */
-    protected $csvDeliveryMethodMetaDef;
-
-    /**
-     * CSV file location for method to price
-     *
-     * @var string
-     */
-    protected $csvDeliveryToPriceDef;
-
-    /**
-     * CSV file location for mapping of method to method group
-     *
-     * @var string
-     */
-    protected $csvCleanNameMethodGroupDef;
-
-    /**
      * Data resource class
      *
      * @var Data|null
@@ -77,45 +42,19 @@ class Carrier implements CarrierInterface
      * @param string|null $csvZoneToDeliveryMethod - csv for ZoneToDeliveyMethod
      * @param string|null $csvDeliveryMethodMeta   - csv for DeliveryMethodMeta
      * @param string|null $csvDeliveryToPrice      - csv for DeliveryToPrice
-     * @param string|null $csvCleanNameToMethod    - csv for CleanNameToMethod
-     * @param string|null $csvCleanNameMethodGroup - csv for $csvCleanNameMethodGroup
      */
     public function __construct(
         $csvCountryCode = null,
         $csvZoneToDeliveryMethod = null,
         $csvDeliveryMethodMeta = null,
-        $csvDeliveryToPrice = null,
-        $csvCleanNameToMethod = null,
-        $csvCleanNameMethodGroup = null
+        $csvDeliveryToPrice = null
     ) {
-        $dir = dirname(realpath(__FILE__)) . '/';
 
-        // Set the default csv values
-        $this->csvCountryCodeDef = "$dir../data/1_countryToZone.csv";
-        if ($csvCountryCode) {
-            $this->csvCountryCodeDef = $csvCountryCode;
-        }
-
-        $this->csvZoneToDeliveryMethodDef = "$dir../data/2_zoneToDeliveryMethod.csv";
-        if ($csvZoneToDeliveryMethod) {
-            $this->csvZoneToDeliveryMethodDef = $csvZoneToDeliveryMethod;
-        }
-
-        $this->csvDeliveryMethodMetaDef = "$dir../data/3_deliveryMethodMeta.csv";
-        if ($csvDeliveryMethodMeta) {
-            $this->csvDeliveryMethodMetaDef = $csvDeliveryMethodMeta;
-        }
-
-        $this->csvDeliveryToPriceDef = "$dir../data/4_deliveryToPrice.csv";
-        if ($csvDeliveryToPrice) {
-            $this->csvDeliveryToPriceDef = $csvDeliveryToPrice;
-        }
-
-        $this->data = isset($data) ? $data : new Data(
-            $this->csvCountryCodeDef,
-            $this->csvZoneToDeliveryMethodDef,
-            $this->csvDeliveryMethodMetaDef,
-            $this->csvDeliveryToPriceDef
+        $this->data = new Data(
+            $csvCountryCode,
+            $csvZoneToDeliveryMethod,
+            $csvDeliveryMethodMeta,
+            $csvDeliveryToPrice
         );
     }
 
@@ -186,8 +125,8 @@ class Carrier implements CarrierInterface
     {
         $methods = [];
         foreach ($this->data->getMappingMethodToMeta() as $item) {
-            $methods[$item[Data::METHOD_META_GROUP_CODE]] =
-                $item[Data::METHOD_NAME_CLEAN];
+            $methods[$item[Data::METHOD_META_GROUP_CODE]]
+                = $item[Data::METHOD_NAME_CLEAN];
         }
 
         return $methods;

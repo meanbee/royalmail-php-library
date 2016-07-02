@@ -69,13 +69,7 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
          * @var Carrier
          */
         $this->_carrier = new Carrier();
-        $this->_dataClass = new Data(
-            $this->_carrier->getCsvCountryCode(),
-            $this->_carrier->getCsvZoneToDeliveryMethod(),
-            $this->_carrier->getCsvDeliveryMethodMeta(),
-            $this->_carrier->getCsvDeliveryToPrice(),
-            $this->_carrier->getCsvCleanNameMethodGroup()
-        );
+        $this->_dataClass = new Data();
 
         $this->_emptyArray = [];
         $this->_testDataClassArray = array(
@@ -155,167 +149,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             $this->_carrier->getRates('GB', 20, 0.050, false),
             "Array size from getRates did not match on
              the expected size of 37 methods returned."
-        );
-    }
-
-    /**
-     * Test to compare the returned data from the Data class to expected values
-     *
-     * @return null
-     */
-    public function testRoyalmailMethodRealValues()
-    {
-        $calculatedMethods = $this->_dataClass->calculateMethods('GB', 19.99, 0.050);
-        foreach ($calculatedMethods as $calculatedMethod => $arrayContents) {
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['id']
-                ),
-                gettype($arrayContents['id']),
-                "id array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['code']
-                ),
-                gettype($arrayContents['code']),
-                "code array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['minimumWeight']
-                ),
-                gettype($arrayContents['minimumWeight']),
-                "minimumWeight array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['maximumWeight']
-                ),
-                gettype($arrayContents['maximumWeight']),
-                "maximumWeight array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['price']
-                ),
-                gettype($arrayContents['price']),
-                "price array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['insuranceValue']
-                ),
-                gettype($arrayContents['insuranceValue']),
-                "insuranceValue array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['name']
-                ),
-                gettype($arrayContents['name']),
-                "name array value not equal to correct type."
-            );
-            $this->assertEquals(
-                gettype(
-                    $this->_testDataClassArray['size']
-                ),
-                gettype($arrayContents['size']),
-                "size array value not equal to correct type."
-            );
-        }
-    }
-
-    /**
-     * Test to ensure the only the expected empty array
-     * is returned from incorrect data to the data class
-     *
-     * @return null
-     */
-    public function testRoyalmailMethodFake()
-    {
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                'GASD', "aSDASD", "ASDASD"
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                123123123, "asdasd", "asdadasd"
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                123123, 123123, "ASDASD"
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                123123123, 123123123, 123123123
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                'GB', "aSD!!ASD", 0.100
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                'GB', 123123123123, 0.100
-            )
-        );
-    }
-
-    /**
-     * Test to ensure that only the expected empty array
-     * is returned from null and incorrect data
-     * from the Data class
-     *
-     * @return null
-     */
-    public function testRoyalmailMethodNull()
-    {
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                null, 123123123123, 0.100
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                null, null, 0.100
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                'GB', null, 0.100
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                'GB', null, null
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                'GB', 123123123123, null
-            )
-        );
-        $this->assertEquals(
-            $this->_emptyArray,
-            $this->_dataClass->calculateMethods(
-                null, null, null
-            )
         );
     }
 
@@ -409,36 +242,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
                 null, null, null
             )
         );
-    }
-
-    /**
-     * Test for insurance value checking that the correct insurance value is being
-     * used in the CSV files
-     *
-     * @return null
-     */
-    public function testInsuranceValue()
-    {
-        foreach ($this->_dataClass->getMappingMethodToMeta() as $array => $data) {
-            foreach ($this->_dataClass->getMappingDeliveryToPrice()
-                as $method => $methodData) {
-                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]
-                ) {
-                    if ($methodData[self::INSURANCE_ROW_PRICE_CSV] != "") {
-                        $this->assertEquals(
-                            $data[self::INSURANCE_ROW_META_CSV],
-                            $methodData[self::INSURANCE_ROW_PRICE_CSV],
-                            sprintf(
-                                "Insurance values %s from mappingMethodToMeta and
-                                %s from mappingDeliveryToPrice were not equal.",
-                                $data[self::INSURANCE_ROW_META_CSV],
-                                $methodData[self::INSURANCE_ROW_PRICE_CSV]
-                            )
-                        );
-                    }
-                }
-            }
-        }
     }
 
     /**
