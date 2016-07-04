@@ -41,22 +41,7 @@ class Data
     const METHOD_INSURANCE_VALUE = 4;
     const METHOD_NAME_CLEAN = 4;
     const METHOD_SIZE = 5;
-
-    /**
-     * Maps the clean name csv to the method method name csv
-     *
-     * @var array
-     */
-    protected $mappingCleanNameToMethod = [];
-
-    /**
-     * Maps the method group name to the clean name, to allow for printing
-     * just the clean names to the user
-     *
-     * @var array
-     */
-    protected $mappingCleanNameMethodGroup = [];
-
+    const METHOD_META_GROUP_CODE = 5;
     /**
      * Maps countries to zones.
      *
@@ -93,25 +78,17 @@ class Data
      * @param string $_csvZoneToDeliveryMethod - zone to method csv path
      * @param string $_csvDeliveryMethodMeta   - delivery method meta csv path
      * @param string $_csvDeliveryToPrice      - delivery to price csv path
-     * @param string $_csvCleanNameToMethod    - clean name to method csv path
-     * @param string $_csvCleanNameMethodGroup - clean name method group csv path
      */
     public function __construct(
         $_csvCountryCode,
         $_csvZoneToDeliveryMethod,
         $_csvDeliveryMethodMeta,
-        $_csvDeliveryToPrice,
-        $_csvCleanNameToMethod,
-        $_csvCleanNameMethodGroup
+        $_csvDeliveryToPrice
     ) {
         $this->mappingCountryToZone = $this->_csvToArray($_csvCountryCode);
         $this->mappingZoneToMethod = $this->_csvToArray($_csvZoneToDeliveryMethod);
         $this->mappingMethodToMeta = $this->_csvToArray($_csvDeliveryMethodMeta);
         $this->mappingDeliveryToPrice = $this->_csvToArray($_csvDeliveryToPrice);
-        $this->mappingCleanNameToMethod = $this->_csvToArray($_csvCleanNameToMethod);
-        $this->mappingCleanNameMethodGroup = $this->_csvToArray(
-            $_csvCleanNameMethodGroup
-        );
     }
 
     /**
@@ -278,12 +255,13 @@ class Data
             ) {
                 $data = $sortedMethodToMeta[$item[self::SHIPPING_METHOD]];
                 $resultArray = [
-                    'shippingMethodName' => $item[self::SHIPPING_METHOD],
+                    'id' => $item[self::SHIPPING_METHOD],
+                    'code' => $data[self::METHOD_META_GROUP_CODE],
+                    'name' => $data[self::METHOD_NAME_CLEAN],
                     'minimumWeight' => (double) $item[self::METHOD_MIN_WEIGHT],
                     'maximumWeight' => (double) $item[self::METHOD_MAX_WEIGHT],
-                    'methodPrice' => (double) $item[self::METHOD_PRICE],
+                    'price' => (double) $item[self::METHOD_PRICE],
                     'insuranceValue' => (int) $item[self::METHOD_INSURANCE_VALUE],
-                    'shippingMethodNameClean' => $data[self::METHOD_NAME_CLEAN]
                 ];
 
                 if (isset($item[self::METHOD_SIZE])) {
@@ -393,28 +371,7 @@ class Data
         }
         return $data;
     }
-
-    /**
-     * Maps the method group name to the clean name and the related method
-     *
-     * @return array
-     */
-    public function getMappingCleanNameToMethod()
-    {
-        return $this->mappingCleanNameToMethod;
-    }
-
-    /**
-     * Maps the method group name to the clean name, to allow
-     * for printing just the clean names to the user
-     *
-     * @return array
-     */
-    public function getMappingCleanNameMethodGroup()
-    {
-        return $this->mappingCleanNameMethodGroup;
-    }
-
+    
     /**
      * Maps countries to zones.
      *

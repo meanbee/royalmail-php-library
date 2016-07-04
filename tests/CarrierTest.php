@@ -74,18 +74,18 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             $this->_carrier->getCsvZoneToDeliveryMethod(),
             $this->_carrier->getCsvDeliveryMethodMeta(),
             $this->_carrier->getCsvDeliveryToPrice(),
-            $this->_carrier->getCsvCleanNameToMethod(),
             $this->_carrier->getCsvCleanNameMethodGroup()
         );
 
         $this->_emptyArray = [];
         $this->_testDataClassArray = array(
-            'shippingMethodName'      => 'test',
+            'id'                      => 'TEST_ID',
+            'code'                    => 'testcode',
             'minimumWeight'           => 1.00,
             'maximumWeight'           => 5.00,
-            'methodPrice'             => 0.99,
+            'price'                   => 0.99,
             'insuranceValue'          => 10,
-            'shippingMethodNameClean' => 'Test',
+            'name'                    => 'Test',
             'size'                    => 'Small',
         );
     }
@@ -129,6 +129,19 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Assert that Method[] return type of rate call
+     *
+     * @return null
+     */
+    public function testGetRatesReturnType()
+    {
+        $rates = $this->_carrier->getRates('GB', 20, 0.050, true);
+        foreach ($rates as $rate) {
+            $this->assertInstanceOf('Meanbee\Royalmail\Method', $rate);
+        }
+    }
+
+    /**
      * Test to ensure that the calculate method class is returning rates with
      * the ignore insurance flag set to false. 30 methods are expected to be
      * returned.
@@ -156,10 +169,17 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         foreach ($calculatedMethods as $calculatedMethod => $arrayContents) {
             $this->assertEquals(
                 gettype(
-                    $this->_testDataClassArray['shippingMethodName']
+                    $this->_testDataClassArray['id']
                 ),
-                gettype($arrayContents['shippingMethodName']),
-                "shippingMethodName array value not equal to correct type."
+                gettype($arrayContents['id']),
+                "id array value not equal to correct type."
+            );
+            $this->assertEquals(
+                gettype(
+                    $this->_testDataClassArray['code']
+                ),
+                gettype($arrayContents['code']),
+                "code array value not equal to correct type."
             );
             $this->assertEquals(
                 gettype(
@@ -177,10 +197,10 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             );
             $this->assertEquals(
                 gettype(
-                    $this->_testDataClassArray['methodPrice']
+                    $this->_testDataClassArray['price']
                 ),
-                gettype($arrayContents['methodPrice']),
-                "methodPrice array value not equal to correct type."
+                gettype($arrayContents['price']),
+                "price array value not equal to correct type."
             );
             $this->assertEquals(
                 gettype(
@@ -191,10 +211,10 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             );
             $this->assertEquals(
                 gettype(
-                    $this->_testDataClassArray['shippingMethodNameClean']
+                    $this->_testDataClassArray['name']
                 ),
-                gettype($arrayContents['shippingMethodNameClean']),
-                "shippingMethodNameClean array value not equal to correct type."
+                gettype($arrayContents['name']),
+                "name array value not equal to correct type."
             );
             $this->assertEquals(
                 gettype(
@@ -392,45 +412,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test co compare the meta names vs the clean name to check that
-     * the correct value exists and is being used.
-     *
-     * @return null
-     */
-    public function testMethodToMetaVsCleanName()
-    {
-        foreach ($this->_dataClass->getMappingMethodToMeta()
-            as $array => $data) {
-            $methodNotExist = false;
-            foreach ($this->_dataClass->getMappingCleanNameToMethod()
-                as $method => $methodData) {
-                // Check the the names are equal
-                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]
-                ) {
-                    $methodNotExist = true;
-                    $this->assertEquals(
-                        $data[self::METHOD_CLEAN_NAME_ROW_META_CSV],
-                        $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV],
-                        sprintf(
-                            "Clean names %s and %s were not equal",
-                            $data[self::METHOD_CLEAN_NAME_ROW_META_CSV],
-                            $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV]
-                        )
-                    );
-                }
-            }
-
-            $this->assertTrue(
-                $methodNotExist,
-                sprintf(
-                    "%s was not found in CleanNameToMethod csv$.",
-                    $data[self::METHOD_NAME_ROW_META_CSV]
-                )
-            );
-        }
-    }
-
-    /**
      * Test for insurance value checking that the correct insurance value is being
      * used in the CSV files
      *
@@ -458,56 +439,6 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
                 }
             }
         }
-
-        foreach ($this->_dataClass->getMappingMethodToMeta() as $array => $data) {
-            foreach ($this->_dataClass->getMappingCleanNameToMethod()
-                as $method => $methodData) {
-                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_CLEANNAME_CSV]
-                ) {
-                    if ($methodData[self::INSURANCE_ROW_CLEANNAME_CSV] != "") {
-                        $this->assertEquals(
-                            $data[self::INSURANCE_ROW_META_CSV],
-                            $methodData[self::INSURANCE_ROW_CLEANNAME_CSV],
-                            sprintf(
-                                "Insurance values %s from mappingMethodToMeta and
-                                 %s from mappingCleanNameToMethod were not equal.",
-                                $data[self::INSURANCE_ROW_META_CSV],
-                                $methodData[self::INSURANCE_ROW_CLEANNAME_CSV]
-                            )
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Test to compare the method clean name vs the method group, ensuring that
-     * the clean names are correct and exists.
-     *
-     * @return null
-     */
-    public function testCleanNameVsMethodGroup()
-    {
-        foreach ($this->_dataClass->getMappingCleanNameToMethod()
-            as $array => $data) {
-            foreach ($this->_dataClass->getMappingCleanNameMethodGroup()
-                as $method => $methodData) {
-                if ($data[self::METHOD_CLEAN_NAME_ROW_CLEANNAME_CSV] == $methodData[self::METHOD_CLEAN_NAME_ROW_CLEANNAMEGROUP_CSV]
-                ) {
-                    $this->assertEquals(
-                        $data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
-                        $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV],
-                        sprintf(
-                            "Clean names %s from mappingCleanNameToMethod and
-                            %s from mappingCleanNameToMethodGroup were not equal.",
-                            $data[self::METHOD_CLEAN_NAME_GROUP_CLEANNAME_CSV],
-                            $methodData[self::METHOD_CLEAN_NAME_GROUP_CLEANNAMEGROUP_CSV]
-                        )
-                    );
-                }
-            }
-        }
     }
 
     /**
@@ -530,7 +461,9 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         foreach ($methods as $code => $name) {
             $this->assertInternalType('string', $code);
             $this->assertFalse(strpos($code, ' '));
+
             $this->assertInternalType('string', $name);
+            $this->assertTrue(strpos($name, ' ') !== false);
         }
     }
 }

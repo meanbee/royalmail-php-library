@@ -57,13 +57,6 @@ class Carrier implements CarrierInterface
     protected $csvDeliveryToPriceDef;
 
     /**
-     * CSV file location for method codes to user-friendly label.
-     *
-     * @var string
-     */
-    protected $csvCleanNameToMethodDef;
-
-    /**
      * CSV file location for mapping of method to method group
      *
      * @var string
@@ -118,23 +111,11 @@ class Carrier implements CarrierInterface
             $this->csvDeliveryToPriceDef = $csvDeliveryToPrice;
         }
 
-        $this->csvCleanNameToMethodDef = "$dir../data/5_cleanNameToMethod.csv";
-        if ($csvCleanNameToMethod) {
-            $this->csvCleanNameToMethodDef = $csvCleanNameToMethod;
-        }
-
-        $this->csvCleanNameMethodGroupDef = "$dir../data/6_cleanNameMethodGroup.csv";
-        if ($csvCleanNameMethodGroup) {
-            $this->csvCleanNameMethodGroupDef = $csvCleanNameMethodGroup;
-        }
-
         $this->data = isset($data) ? $data : new Data(
             $this->csvCountryCodeDef,
             $this->csvZoneToDeliveryMethodDef,
             $this->csvDeliveryMethodMetaDef,
-            $this->csvDeliveryToPriceDef,
-            $this->csvCleanNameToMethodDef,
-            $this->csvCleanNameMethodGroupDef
+            $this->csvDeliveryToPriceDef
         );
     }
 
@@ -179,10 +160,11 @@ class Carrier implements CarrierInterface
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
                 $method = new Method(
-                    $item['shippingMethodName'],
-                    $item['shippingMethodNameClean'],
+                    $item['id'],
+                    $item['code'],
+                    $item['name'],
                     $country_code,
-                    $item['methodPrice'],
+                    $item['price'],
                     $item['insuranceValue'],
                     $item['minimumWeight'],
                     $item['maximumWeight'],
@@ -203,8 +185,9 @@ class Carrier implements CarrierInterface
     public function getAllMethods()
     {
         $methods = [];
-        foreach ($this->data->getMappingCleanNameMethodGroup() as $item) {
-            $methods[$item[0]] = $item[1];
+        foreach ($this->data->getMappingMethodToMeta() as $item) {
+            $methods[$item[Data::METHOD_META_GROUP_CODE]] =
+                $item[Data::METHOD_NAME_CLEAN];
         }
 
         return $methods;
@@ -248,16 +231,6 @@ class Carrier implements CarrierInterface
     public function getCsvDeliveryToPrice()
     {
         return $this->csvDeliveryToPriceDef;
-    }
-
-    /**
-     * CSV file location for method codes to user-friendly label.
-     *
-     * @return string - default csv
-     */
-    public function getCsvCleanNameToMethod()
-    {
-        return $this->csvCleanNameToMethodDef;
     }
 
     /**
