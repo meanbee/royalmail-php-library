@@ -44,7 +44,8 @@ This library uses six CSV files to determine which shipping methods are availabl
     * Minimum price of method
     * Maximum price available to the method (the maximum price of shipping cart this method applies to)
     * Max insurance available on method
-    * Clean method name. The clean method name represents the name of the method group, and is also represented in the 5 and 6 csvs. The clean method name is used to match multiple methods of the same type to the correct group.
+    * Human-friendly method name
+    * Delivery group
 
 4. [4_deliveryToPrice.csv](https://github.com/meanbee/royalmail/blob/develop/lib/Meanbee/RoyalmailPHPLibrary/data/4_deliveryToPrice.csv)
     * Method name
@@ -53,18 +54,5 @@ This library uses six CSV files to determine which shipping methods are availabl
     * Price of method
     * Max insurance value
     * In the case of small or medium parcel up to 2kg in weight "SMALL" or "MEDIUM" else blank
-
-5. [5_cleanNameToMethod.csv](https://github.com/meanbee/royalmail/blob/develop/lib/Meanbee/RoyalmailPHPLibrary/data/5_cleanNameToMethod.csv)
-    * Method group name
-    * Clean method name
-    * Dirty method name
-
-    Each method group name is a all lowercase name that represents the group of method names overall. One method name represnts multipel method names.
-
-6. [6_cleanNameToMethodGroup](https://github.com/meanbee/royalmail/blob/develop/lib/Meanbee/RoyalmailPHPLibrary/data/6_cleanNameMethodGroup.csv)
-    * Method group name
-    * Clean method name
-
-    This csv is used to form list of just the clean method names if necessasary.
 
 Method names are constructed in the WORLDZONE_NAME_WITH_UNDERSCORES format with a separate method being added for each separate foramt. Examples of these can be seen in multiple of the csvs. In the case of extra insurance available on the item, another method must be created. An example can be seen in the 3_deliveryMethodMeta.csv.   

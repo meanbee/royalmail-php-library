@@ -28,6 +28,14 @@ namespace Meanbee\Royalmail;
 class Method
 {
     /**
+     * The ID of the method rule.
+     *
+     * @var string
+     */
+    protected $id;
+
+
+    /**
      * The shipping code name of the method
      *
      * @var string
@@ -86,8 +94,9 @@ class Method
     /**
      * Method constructor.
      *
-     * @param string $code           - Country code of method
-     * @param string $name           - Clean shipping code of method
+     * @param string $id             - Method unique identifier
+     * @param string $code           - Method code
+     * @param string $name           - Method label
      * @param string $countryCode    - Country code of method
      * @param string $price          - Price of method
      * @param string $insuranceValue - Insurance value of method
@@ -96,6 +105,7 @@ class Method
      * @param null   $size           - Parcel size, only applies to sm and md parcels
      */
     public function __construct(
+        $id,
         $code,
         $name,
         $countryCode,
@@ -105,6 +115,7 @@ class Method
         $maximumWeight,
         $size = null
     ) {
+        $this->id = $id;
         $this->code = $code;
         $this->name = $name;
         $this->countryCode = $countryCode;
@@ -116,7 +127,17 @@ class Method
     }
 
     /**
-     * The shipping code name of the method
+     * The unique ID of a method
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * The method code
      *
      * @return string
      */
