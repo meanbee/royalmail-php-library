@@ -186,8 +186,8 @@ class Carrier implements CarrierInterface
     {
         $methods = [];
         foreach ($this->data->getMappingMethodToMeta() as $item) {
-            $methods[$item[Data::METHOD_META_GROUP_CODE]] =
-                $item[Data::METHOD_NAME_CLEAN];
+            $methods[$item[Data::METHOD_META_GROUP_CODE]]
+                = $item[Data::METHOD_NAME_CLEAN];
         }
 
         return $methods;

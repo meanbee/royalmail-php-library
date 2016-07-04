@@ -422,7 +422,8 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         foreach ($this->_dataClass->getMappingMethodToMeta() as $array => $data) {
             foreach ($this->_dataClass->getMappingDeliveryToPrice()
                 as $method => $methodData) {
-                if ($data[self::METHOD_NAME_ROW_META_CSV] == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]
+                if ($data[self::METHOD_NAME_ROW_META_CSV]
+                    == $methodData[self::METHOD_NAME_ROW_PRICE_CSV]
                 ) {
                     if ($methodData[self::INSURANCE_ROW_PRICE_CSV] != "") {
                         $this->assertEquals(
