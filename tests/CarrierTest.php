@@ -79,12 +79,13 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
 
         $this->_emptyArray = [];
         $this->_testDataClassArray = array(
-            'shippingMethodName'      => 'test',
+            'id'                      => 'TEST_ID',
+            'code'                    => 'testcode',
             'minimumWeight'           => 1.00,
             'maximumWeight'           => 5.00,
-            'methodPrice'             => 0.99,
+            'price'                   => 0.99,
             'insuranceValue'          => 10,
-            'shippingMethodNameClean' => 'Test',
+            'name'                    => 'Test',
             'size'                    => 'Small',
         );
     }
@@ -128,6 +129,19 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Assert that Method[] return type of rate call
+     *
+     * @return null
+     */
+    public function testGetRatesReturnType()
+    {
+        $rates = $this->_carrier->getRates('GB', 20, 0.050, true);
+        foreach ($rates as $rate) {
+            $this->assertInstanceOf('Meanbee\Royalmail\Method', $rate);
+        }
+    }
+
+    /**
      * Test to ensure that the calculate method class is returning rates with
      * the ignore insurance flag set to false. 30 methods are expected to be
      * returned.
@@ -155,10 +169,17 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         foreach ($calculatedMethods as $calculatedMethod => $arrayContents) {
             $this->assertEquals(
                 gettype(
-                    $this->_testDataClassArray['shippingMethodName']
+                    $this->_testDataClassArray['id']
                 ),
-                gettype($arrayContents['shippingMethodName']),
-                "shippingMethodName array value not equal to correct type."
+                gettype($arrayContents['id']),
+                "id array value not equal to correct type."
+            );
+            $this->assertEquals(
+                gettype(
+                    $this->_testDataClassArray['code']
+                ),
+                gettype($arrayContents['code']),
+                "code array value not equal to correct type."
             );
             $this->assertEquals(
                 gettype(
@@ -176,10 +197,10 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             );
             $this->assertEquals(
                 gettype(
-                    $this->_testDataClassArray['methodPrice']
+                    $this->_testDataClassArray['price']
                 ),
-                gettype($arrayContents['methodPrice']),
-                "methodPrice array value not equal to correct type."
+                gettype($arrayContents['price']),
+                "price array value not equal to correct type."
             );
             $this->assertEquals(
                 gettype(
@@ -190,10 +211,10 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
             );
             $this->assertEquals(
                 gettype(
-                    $this->_testDataClassArray['shippingMethodNameClean']
+                    $this->_testDataClassArray['name']
                 ),
-                gettype($arrayContents['shippingMethodNameClean']),
-                "shippingMethodNameClean array value not equal to correct type."
+                gettype($arrayContents['name']),
+                "name array value not equal to correct type."
             );
             $this->assertEquals(
                 gettype(
@@ -440,7 +461,9 @@ class CarrierTest extends \PHPUnit_Framework_TestCase
         foreach ($methods as $code => $name) {
             $this->assertInternalType('string', $code);
             $this->assertFalse(strpos($code, ' '));
+
             $this->assertInternalType('string', $name);
+            $this->assertTrue(strpos($name, ' ') !== false);
         }
     }
 }

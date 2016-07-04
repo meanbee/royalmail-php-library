@@ -110,18 +110,12 @@ class Carrier implements CarrierInterface
         if ($csvDeliveryToPrice) {
             $this->csvDeliveryToPriceDef = $csvDeliveryToPrice;
         }
-        
-        $this->csvCleanNameMethodGroupDef = "$dir../data/6_cleanNameMethodGroup.csv";
-        if ($csvCleanNameMethodGroup) {
-            $this->csvCleanNameMethodGroupDef = $csvCleanNameMethodGroup;
-        }
 
         $this->data = isset($data) ? $data : new Data(
             $this->csvCountryCodeDef,
             $this->csvZoneToDeliveryMethodDef,
             $this->csvDeliveryMethodMetaDef,
-            $this->csvDeliveryToPriceDef,
-            $this->csvCleanNameMethodGroupDef
+            $this->csvDeliveryToPriceDef
         );
     }
 
@@ -166,10 +160,11 @@ class Carrier implements CarrierInterface
         foreach ($sortedDeliveryMethods as $shippingMethod) {
             foreach ($shippingMethod as $item) {
                 $method = new Method(
-                    $item['shippingMethodName'],
-                    $item['shippingMethodNameClean'],
+                    $item['id'],
+                    $item['code'],
+                    $item['name'],
                     $country_code,
-                    $item['methodPrice'],
+                    $item['price'],
                     $item['insuranceValue'],
                     $item['minimumWeight'],
                     $item['maximumWeight'],
@@ -190,8 +185,9 @@ class Carrier implements CarrierInterface
     public function getAllMethods()
     {
         $methods = [];
-        foreach ($this->data->getMappingCleanNameMethodGroup() as $item) {
-            $methods[$item[0]] = $item[1];
+        foreach ($this->data->getMappingMethodToMeta() as $item) {
+            $methods[$item[Data::METHOD_META_GROUP_CODE]] =
+                $item[Data::METHOD_NAME_CLEAN];
         }
 
         return $methods;
